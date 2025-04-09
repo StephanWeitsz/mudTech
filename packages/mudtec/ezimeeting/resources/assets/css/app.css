@@ -1,0 +1,15 @@
+.admin-menu:hover .submenu {
+    display: block; /* Show submenu only on hover over Admin */
+}
+
+.submenu li a {
+    padding: 0.5rem 1rem;
+    display: block;
+    color: #4a4a4a;
+    text-decoration: none;
+}
+
+.submenu li a:hover {
+    background-color: #f0f0f0;
+    color: #000;
+}

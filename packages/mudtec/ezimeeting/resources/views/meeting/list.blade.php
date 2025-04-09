@@ -1,0 +1,9 @@
+<x-ezim::ezimeeting>
+    @section('content')
+        @if(isset($ownerId))  
+            @livewire('myMeetings')
+        @else
+            @livewire('MeetingList')
+        @endif    
+    @endsection
+</x-ezim::ezimeeting>

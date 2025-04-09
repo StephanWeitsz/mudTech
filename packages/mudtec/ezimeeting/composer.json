@@ -1,0 +1,57 @@
+{
+    "name": "mudtec/ezimeeting",
+    "description": "Manage meeting munites and actions",
+    "type": "library",
+    "license": "MIT",
+
+    "authors": [
+        {
+            "name": "Stephan Weitsz",
+            "email": "Stephan.Weitsz@universal.co.za",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "laravel/jetstream": "^5.2",
+        "laravel/telescope": "^5.2",
+        "livewire/livewire": "^3.0"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Mudtec\\Ezimeeting\\": "src/",
+            "Mudtec\\Ezimeeting\\Database\\Seeders\\": "packages/mudtec/ezimeeting/src/Database/Seeders",
+            "Mudtec\\Ezimeeting\\Database\\Factory\\": "packages/mudtec/ezimeeting/src/Database/Factories"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mudtec\\Ezimeeting\\Tests\\": "packages/mudtec/ezimeeting/src/Tests"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=public --ansi --force",
+            "@php artisan jetstream:install livewire --team --dark"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mudtec\\Ezimeeting\\Providers\\EzimeetingProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-main": "1.0.x-dev"
+        }     
+    }
+}
+  
