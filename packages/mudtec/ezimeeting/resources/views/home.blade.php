@@ -25,55 +25,60 @@
                 </div>
             @endif
             
-            <main class="container mx-auto px-5 flex flex-growr ">
-                <div class="mb-5">
+            <main class="container mx-auto px-5 flex flex-grow">
+                <div class="mb-5 w-full">
                     <h2 class="my-5 text-3xl text-yellow-500 font-bold">My Meetings</h2>
-                    <div class="w-full">
-                        <div class="grid grid-cols-1 gap-10 w-full md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                            @if(isset($meetings))
-                                @foreach($meetings as $meeting)
-                                    <div class="w-full">
-                                        <div class="m-3 border border-black rounded-lg p-4 shadow-lg">
+                    <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
+                        @if(isset($meetings))
+                            @foreach($meetings as $meeting)
+                                <div class="w-full">
+                                    <div class="h-full flex flex-col justify-between border border-black rounded-lg p-4 shadow-lg">
+                                        <div>
                                             <div class="flex items-center mb-2">
-                                                <a href="#" class="text-white rounded-xl px-3 py-1 text-sm mr-3" style="background-color: {{ get_meeting_color($meeting->meeting_status_id) ?? sprintf('#%06X', mt_rand(0, 0xFFFFFF)) }};">
+                                                <a href="#" class="text-white rounded-xl px-3 py-1 text-sm mr-3"
+                                                   style="background-color: {{ get_meeting_color($meeting->meeting_status_id) ?? sprintf('#%06X', mt_rand(0, 0xFFFFFF)) }};">
                                                     {{ get_meeting_status($meeting->meeting_status_id) }}
                                                 </a>    
                                                 <p class="text-gray-500 text-sm">{{ \Carbon\Carbon::parse($meeting->scheduled_at)->format('Y-m-d H:i') }}</p>
                                                 <span class="text-gray-500 text-sm px-3">{{$meeting->duration}} minutes</span>
                                             </div>
+            
                                             <h3 class="text-xl font-semibold text-gray-700 pt-4">{{$meeting->description}}</h3>
                                             <h4 class="text-lg font-semibold text-gray-700 pt-2">About</h4>
-                                            <p class="text-md text-gray-600 ">{{$meeting->text}}</p>
+                                            <p class="text-md text-gray-600">{{ \Illuminate\Support\Str::limit($meeting->text, 100) }}</p>
+
                                             <h4 class="text-lg font-semibold text-gray-700 pt-2">Purpose</h4>
-                                            <a class="text-lg text-gray-600">{{$meeting->purpose}}</a>
+                                            <p class="text-md text-gray-600">{{$meeting->purpose}}</p>
 
                                             <div class="py-2">
-                                                <span class="text-md text-green-600">Meeting Ocurance : {{get_meeting_interval($meeting->meeting_interval_id)}}</span>
+                                                <span class="text-md text-green-600">Meeting Occurrence: {{ get_meeting_interval($meeting->meeting_interval_id) }}</span>
                                             </div>
+
                                             <div class="py-2">
-                                                <span  class="text-md text-green-600">Location : {{get_meeting_location($meeting->meeting_location_id)}}</span>
+                                                <span class="text-md text-green-600">Location: {{ get_meeting_location($meeting->meeting_location_id) }}</span>
                                             </div>
 
                                             @if(isset($meeting->external_url))
                                                 <div class="p-2">
-                                                    <a href="{{$meeting->external_url}}" class="text-lg text-gray-600">Meeting Link</a>
+                                                    <a href="{{$meeting->external_url}}" class="text-md text-blue-600 underline">Meeting Link</a>
                                                 </div>
                                             @endif
-
-                                            <div class="flex justify-between mt-5">
-                                                @if(verify_user('Organizer|Attendee'))
-                                                    <a href="{{ route('meetingView', $meeting->id) }}" class="text-yellow-500 font-semibold">View</a>
-                                                @endif
-                                                @if(verify_user('Organizer|CorpAdmin'))    
-                                                    <a href="{{ route('meetingEdit', $meeting->id) }}" class="text-yellow-500 font-semibold">Edit</a>
-                                                @endif
-                                            </div>    
                                         </div>
+
+                                        <div class="flex justify-between mt-5">
+                                            @if(verify_user('Organizer|Attendee'))
+                                                <a href="{{ route('meetingView', $meeting->id) }}" class="text-yellow-500 font-semibold">View</a>
+                                            @endif
+                                            @if(verify_user('Organizer|CorpAdmin'))    
+                                                <a href="{{ route('meetingEdit', $meeting->id) }}" class="text-yellow-500 font-semibold">Edit</a>
+                                            @endif
+                                        </div>    
                                     </div>
-                                @endforeach                                
-                            @endif 
-                        </div>
+                                </div>
+                            @endforeach
+                        @endif 
                     </div>
+    
                     <div class="grid w-full text-center flex justify-center">
                         <a class="m-5 block text-center text-lg text-yellow-500 font-semibold"
                             href="{{ route('meetingList') }}">More...
