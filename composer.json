@@ -12,7 +12,7 @@
         "laravel/telescope": "^5.2",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.0",
-        "mudtec/ezimeeting": "dev-main"
+        "mudtec/ezimeeting": "dev-master"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

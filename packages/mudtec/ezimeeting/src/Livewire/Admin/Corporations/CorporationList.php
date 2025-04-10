@@ -39,7 +39,7 @@ class CorporationList extends Component
     {
         if (verify_user("SuperUser|Admin")) {
             $corporations = Corporation::latest()
-                ->where('name', 'ilike', "%{$this->search}%")
+                ->whereRaw('LOWER(name) LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
                 ->paginate(20);
         } //if (verify_user("SuperUser|Admin")) { 
         else {
@@ -47,7 +47,7 @@ class CorporationList extends Component
             
             if ($myCorporations && $myCorporations->isNotEmpty()) {
                 $corporations = Corporation::latest()
-                    ->where('name', 'ilike', "%{$this->search}%")
+                    ->whereRaw('LOWER(name) LIKE ?', ['%' . mb_strtolower($this>search) . '%'])
                     ->whereIn('id', $myCorporations->pluck('id'))
                     ->paginate(20);
             } else {

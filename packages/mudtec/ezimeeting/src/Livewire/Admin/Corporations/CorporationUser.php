@@ -65,23 +65,13 @@ class CorporationUser extends Component
     }
 
     public function render()
-    {
-        /*
-        $users = User::whereDoesntHave('corporations', function ($query) {
-            $query->where('corporations.id', '<>', $this->selectedCorporation);
-        })
-        ->where(function ($query) {
-            $query->where('name', 'ilike', "%{$this->search}%")
-                ->orWhere('email', 'ilike', "%{$this->search}%");
-        })->paginate(20);
-        */
-        
+    {       
         if($this->selectedCorporation) {
 
             if($this->overRideUser) {
-                $availableUsers = User::where(function ($query) {
-                    $query->where('name', 'ilike', "%{$this->search}%")
-                    ->orWhere('email', 'ilike', "%{$this->search}%");
+                $availableUsers = User::where(function ($query) use ($search) {
+                    $query->whereRaw('LOWER(name) LIKE ?', ['%' . mb_strtolower($search) . '%'])
+                          ->orWhereRaw('LOWER(email) LIKE ?', ['%' . mb_strtolower($search) . '%']);
                 })->paginate(20);
                 if(!$availableUsers)
                     $availableUsers = collect();
@@ -89,8 +79,8 @@ class CorporationUser extends Component
             else {
                 $availableUsers = User::whereDoesntHave('corporations')
                 ->where(function ($query) {
-                    $query->where('name', 'ilike', "%{$this->search}%")
-                        ->orWhere('email', 'ilike', "%{$this->search}%");
+                    $query->whereRaw('LOWER(name)', 'LIKE ?', ['%' . mb_strtolower($search) . '%'])
+                        ->orWhereRaw('LOWER(email)', 'LIKE ?', ['%' . mb_strtolower($search) . '%']);
                 })->paginate(20);
                 if(!$availableUsers)
                     $availableUsers = collect();
@@ -100,8 +90,8 @@ class CorporationUser extends Component
                 $query->where('corporations.id', $this->selectedCorporation);
             })
             ->where(function ($query) {
-                $query->where('name', 'ilike', "%{$this->search}%")
-                    ->orWhere('email', 'ilike', "%{$this->search}%");
+                $query->whereRaw('LOWER(name)', 'LIKE ?', ['%' . mb_strtolower($search) . '%'])
+                    ->orWhereRaw('LOWER(email)', 'LIKE ?', ['%' . mb_strtolower($search) . '%']);
             })->paginate(20);
             if(!$assignedUsers)
                 $assignedUsers = collect();

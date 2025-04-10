@@ -9,7 +9,7 @@ services:
     ports:
       - 5412:5432
     networks:
-      - host
+      - laravel_network
   admin:
     container_name: 'mud-admin'
     image: dpage/pgadmin4
@@ -19,7 +19,7 @@ services:
     ports:
       - 9011:80
     networks:
-      - host
+      - laravel_network
   mailhog:
     container_name: 'mud-hog'
     image: mailhog/mailhog:latest
@@ -27,7 +27,7 @@ services:
       - 1025:1025
       - 8025:8025
     networks:
-      - host
+      - laravel_network
 networks:
-  host:
-    external: true
+  laravel_network:
+    driver: bridge

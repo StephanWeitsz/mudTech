@@ -21,9 +21,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Mudtec\\Ezimeeting\\": "src/",
-            "Mudtec\\Ezimeeting\\Database\\Seeders\\": "packages/mudtec/ezimeeting/src/Database/Seeders",
-            "Mudtec\\Ezimeeting\\Database\\Factory\\": "packages/mudtec/ezimeeting/src/Database/Factories"
+            "Mudtec\\Ezimeeting\\": "src/"
         }
     },
     "autoload-dev": {
