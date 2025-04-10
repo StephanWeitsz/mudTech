@@ -23,8 +23,8 @@ class RolesList extends Component
     public function render()
     {
         $roles = Role::query()
-            ->where('description', 'ilike', "%{$this->search}%")
-            ->orwhere('text', 'ilike', "%{$this->search}%")
+            ->whereRaw('LOWER(description) LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
+            ->orWhereRaw('LOWER(text) LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate($this->perPage);
 

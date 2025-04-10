@@ -52,8 +52,8 @@ class usersList extends Component
     public function render()
     {
         $users = User::query()
-        ->where('name', 'ilike', "%{$this->search}%")
-        ->orwhere('email', 'ilike', "%{$this->search}%")
+        ->whereRaw('LOWER(name) LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
+        ->orWhereRaw('LOWER(email) LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
         ->orderBy($this->sortField, $this->sortDirection)
         ->paginate($this->perPage);
 

@@ -87,8 +87,8 @@ class MeetingMinuteAttendees extends Component
         $this->delegates = MeetingDelegate::where('meeting_id', $this->meetingId)
         ->when($this->search, function($query) {
             $query->where(function($query) {
-                $query->where('delegate_name', 'ilike', '%' . $this->search . '%')
-                      ->orWhere('delegate_email', 'ilike', '%' . $this->search . '%');
+                $query->whereRaw('LOWER(delegate_name) LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
+                      ->orWhereRaw('LOWER(delegate_email)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
             });
         })
         ->orderBy('delegate_name')

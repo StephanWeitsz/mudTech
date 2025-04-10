@@ -20,7 +20,7 @@ class DepartmentCorporationsList extends Component
     public function render()
     {
         $corporations = Corporation::latest()
-                            ->where('name', 'ilike', "%{$this->search}%")
+                            ->whereRaw('LOWER(name) LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
                             ->paginate(20);
 
         return view('ezimeeting::livewire.admin.departments.department-corporations-list', ['corporations'=>$corporations]);

@@ -48,7 +48,7 @@ class DepartmentList extends Component
     {
         return view('ezimeeting::livewire.admin.departments.department-list', [
             'departments' => Department::latest()
-                ->where('name', 'ilike', "%{$this->search}%")
+                ->whereRaw('LOWER(name) LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
                 ->where('corporation_id', '=', $this->corporation)
                 ->paginate(20)
         ]);

@@ -34,10 +34,10 @@ class myMeetings extends Component
     public function render()
     {
         $meetings = Meeting::when($this->search, function ($query) {
-            $query->where('description', 'ilike', '%' . $this->search . '%');
-            $query->orwhere('text', 'ilike', '%' . $this->search . '%');
-            $query->orwhere('purpose', 'ilike', '%' . $this->search . '%');
-            $query->orwhere('scheduled_at', 'ilike', '%' . $this->search . '%');
+            $query->whereRaw('LOWER(description)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
+            $query->orWhereRaw('LOWER(text)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
+            $query->orWhereRaw('LOWER(purpose)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
+            $query->orWhereRaw('LOWER(scheduled_at)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
         })
         ->where('created_by_user_id', auth()->user()->id) 
         ->paginate(10);

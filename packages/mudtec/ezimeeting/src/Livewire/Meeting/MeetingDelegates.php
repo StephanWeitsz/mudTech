@@ -64,8 +64,8 @@ class MeetingDelegates extends Component
                   ->where('is_active', true);
         })
         ->where(function ($query) {
-            $query->where('name', 'ilike', "%{$this->search}%")
-                  ->orWhere('email', 'ilike', "%{$this->search}%");
+            $query->whereRaw('LOWER(name) LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
+                  ->orWhereRaw('LOWER(email) LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
         })
         ->get();
         
@@ -85,8 +85,8 @@ class MeetingDelegates extends Component
         $this->assUsers = MeetingDelegate::where('meeting_id', $this->meetingId)
             ->where('is_active', true)
             ->where(function ($query) {
-                $query->where('delegate_name', 'ilike', "%{$this->search}%")
-                      ->orWhere('delegate_email', 'ilike', "%{$this->search}%");
+                $query->whereRaw('LOWER(delegate_name)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
+                      ->orWhereRaw('LOWER(delegate_email)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
             })
             ->get();
     }

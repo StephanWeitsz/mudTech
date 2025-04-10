@@ -34,10 +34,10 @@ class MeetingList extends Component
     public function render()
     {
         $meetings = Meeting::when($this->search, function ($query) {
-            $query->where('description', 'ilike', '%' . $this->search . '%');
-            $query->orwhere('text', 'ilike', '%' . $this->search . '%');
-            $query->orwhere('purpose', 'ilike', '%' . $this->search . '%');
-            $query->orwhere('scheduled_at', 'ilike', '%' . $this->search . '%');
+            $query->whereRaw('LOWER(description) LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
+            $query->orWhereRaw('LOWER(text)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
+            $query->orWhereRaw('LOWER(purpose)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
+            $query->orWhereRaw('LOWER(scheduled_at)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
         })->paginate(10);
 
         return view('ezimeeting::livewire.meeting.meeting-list', ['meetings' => $meetings]);
