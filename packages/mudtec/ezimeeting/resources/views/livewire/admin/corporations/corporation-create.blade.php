@@ -7,7 +7,7 @@
     @include('ezimeeting::livewire.includes.warnings.error')
 
     <div class="container mx-auto bg-white shadow-md rounded-lg p-6 w-3/4">
-        <form wire:submit.prevent="store">
+        <form wire:submit.prevent="store" enctype="multipart/form-data">
             <div class="mb-4">
                 <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                 <input type="text" wire:model="name" id="name" class="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring-blue-300">

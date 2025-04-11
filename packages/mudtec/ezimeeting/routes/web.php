@@ -72,7 +72,6 @@ Route::middleware('web')->group(function () {
 
     Route::get('/eziMeeting/meeting/owner/list', [MeetingController::class, 'ownerList'])->name('myMeetingList');
 
-
     Route::get('/eziMeeting/meeting/new', [MeetingController::class, 'new'])->name('newMeeting');
     Route::get('/eziMeeting/meeting/new/delegates/{corpId}/{meetingId}', [MeetingController::class, 'delegates'])->name('newMeetingDelegates');
     Route::get('/eziMeeting/meeting/list', [MeetingController::class, 'list'])->name('meetingList');
@@ -86,10 +85,10 @@ Route::middleware('web')->group(function () {
     Route::get('/eziMeeting/meeting/{meeting}/minute/{minute}', [MeetingController::class, 'viewMinutes'])->name('viewMeetingMinutes');
 
     Route::get('/eziMeeting/about', [HomeController::class, 'about'])->name('about');
-    Route::get('/eziMeeting/cantact', [HomeController::class, 'contact'])->name('contact');
+    Route::get('/eziMeeting/contact', [HomeController::class, 'contact'])->name('contact');
     Route::post('/eziMeeting/contact/send', [HomeController::class, 'contactSubmit'])->name('contact.submit');
     Route::get('/eziMeeting/terms', [HomeController::class, 'terms'])->name('terms');
-    Route::get('/eziMeeting/terms', [HomeController::class, 'terms'])->name('terms');
+    Route::get('/eziMeeting/privacy', [HomeController::class, 'privacy'])->name('privacy');
     //Route::get('/eziMeeting/faq', [HomeController::class, 'faq'])->name('faq');
 
 });

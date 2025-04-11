@@ -18,6 +18,7 @@ use Mudtec\Ezimeeting\Models\User;
  * @property string $text
  * @property string $website
  * @property string $logo
+ * @property string $secret
  */
 class Corporation extends Model
 {
@@ -43,6 +44,7 @@ class Corporation extends Model
         'website',
         'email',
         'logo',
+        'secret',
     ];
    
     public function setNameAttribute($value)

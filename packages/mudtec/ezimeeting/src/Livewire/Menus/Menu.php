@@ -42,19 +42,19 @@ class Menu extends Component
         ],
         [
             'label' => 'About Us',
-            'route' => 'about',
+            'route' => '/eziMeeting/about',
             'auth' => true,
             'submenus' => [],
         ],
         [
             'label' => 'Contact Us',
-            'route' => 'contact',
+            'route' => '/eziMeeting/contact',
             'auth' => true,
             'submenus' => [],
         ],
         [
             'label' => 'Terms',
-            'route' => 'terms',
+            'route' => '/eziMeeting/terms',
             'auth' => true,
             'submenus' => [],
         ],

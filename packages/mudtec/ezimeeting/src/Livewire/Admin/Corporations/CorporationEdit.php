@@ -20,6 +20,7 @@ class CorporationEdit extends Component
     public $email;
     public $logo;
     public $logoPath;
+    public $secret;
 
     public $page_heading = 'Corporations';
     public $page_sub_heading = 'Editing a company';
@@ -34,6 +35,7 @@ class CorporationEdit extends Component
         $this->email = $corporation->email;
         $this->logoPath = $corporation->logo;
         $this->logo = "";
+        $this->secret = $corporation->secret;
     }
 
     public function update()
