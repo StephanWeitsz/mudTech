@@ -65,7 +65,8 @@
                         {{--@dump($meetingMinuteState)--}}
 
                         <!-- Action Button -->
-                        @if($meetingMinuteState == 'started')
+                        @if($meetingMinuteState == 'started' or
+                            $meetingMinuteState == 'Active')
                             <div class="flex justify-end p-4 bg-white">
                                 <button wire:click="showAddItem"
                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >
@@ -78,10 +79,17 @@
                         @if($meetingMinuteItems)
                             @foreach($meetingMinuteItems as $item)
                                 <div class="grid grid-cols-10 border-b border-gray-300">
-                                    @if($meetingMinuteState == 'started')
-                                        <div class="col-span-6 px-4 py-2 border-r"><h3>{{$item->description}}</h3><br><pre>{{$item->text}}</pre></div>
+                                    @if($meetingMinuteState == 'started' or
+                                        $meetingMinuteState == 'Active')
+                                        <div class="col-span-6 px-4 py-2 border-r">
+                                            <h3>{{$item->description}}</h3><br>
+                                            <pre class="whitespace-pre-wrap font-mono">{{$item->text}}</pre>
+                                        </div>
                                     @else
-                                        <div class="col-span-8 px-4 py-2 border-r"><h3>{{$item->description}}</h3><br><pre>{{$item->text}}</pre></div>
+                                        <div class="col-span-8 px-4 py-2 border-r">
+                                            <h3>{{$item->description}}</h3><br>
+                                            <pre class="whitespace-pre-wrap font-mono">{{$item->text}}</pre>
+                                        </div>
                                     @endif    
                                     <div class="col-span-2 px-4 py-2 border-r">
                                         {{ \Carbon\Carbon::parse($item->date_logged)->format('Y-m-d') }}
@@ -90,7 +98,8 @@
                                             {{ \Carbon\Carbon::parse($item->date_closed)->format('Y-m-d') }}
                                         @endif
                                     </div>
-                                    @if($meetingMinuteState == 'started')
+                                    @if($meetingMinuteState == 'started' or
+                                        $meetingMinuteState == 'Active')
                                         <div class="col-span-2 px-4 py-2">
                                             <div class="flex flex-wrap">
                                                 <div class="w-1/2 px-2 mb-2">
@@ -132,13 +141,21 @@
                                     @foreach($item->meetingMinuteNotes as $note)
                                         <div class="grid grid-cols-10 border-b border-gray-300 bg-gray-50">
                                             <div class="col-span-1 px-4 py-2 border-r">*</div>
-                                            @if($meetingMinuteState == 'started')
-                                                <div class="col-span-5 px-4 py-2 border-r"><h3>{{$note->description}}</h3><br><pre>{{$note->text}}</pre></div>
+                                            @if($meetingMinuteState == 'started' or
+                                                $meetingMinuteState == 'Active')
+                                                <div class="col-span-5 px-4 py-2 border-r">
+                                                    <h3>{{$note->description}}</h3><br>
+                                                    <pre class="whitespace-pre-wrap font-mono">{{$note->text}}</pre>
+                                                </div>
                                             @else
-                                                <div class="col-span-7 px-4 py-2 border-r"><h3>{{$note->description}}</h3><br><pre>{{$note->text}}</pre></div>
+                                                <div class="col-span-7 px-4 py-2 border-r">
+                                                    <h3>{{$note->description}}</h3><br>
+                                                    <pre class="whitespace-pre-wrap font-mono">{{$note->text}}</pre>
+                                                </div>
                                             @endif
                                             <div class="col-span-2 px-4 py-2 border-r">{{ \Carbon\Carbon::parse($note->date_logged)->format('Y-m-d')}}</div>
-                                            @if($meetingMinuteState == 'started')
+                                            @if($meetingMinuteState == 'started' or
+                                                $meetingMinuteState == 'Active')
                                                 <div class="col-span-2 px-4 py-2">
                                                     <div class="flex flex-wrap">
                                                         <div class="w-1/2 px-2 mb-2">
@@ -186,11 +203,12 @@
                                                         {{$action->meetingMinuteActionStatus->description}}
                                                     </div>
                                                   
-                                                    @if($meetingMinuteState == 'started')
+                                                    @if($meetingMinuteState == 'started' or
+                                                        $meetingMinuteState == 'Active')
                                                         <div class="col-span-5 px-4 py-3 border-r">
                                                             <h3>{{$action->description}}</h3>
                                                             <br>
-                                                            <pre>{{$action->text}}</pre>
+                                                            <pre class="whitespace-pre-wrap font-mono">{{$action->text}}</pre>
                                                         
                                                             @if($action->delegates->isNotEmpty())
                                                                 <div class="mt-5 p-2 border border-red-200 bg-gray-300"> 
@@ -208,10 +226,14 @@
                                                             @endif
                                                         </div>
                                                     @else
-                                                        <div class="col-span-7 px-4 py-3 border-r"><h3>{{$action->description}}</h3><br><pre>{{$action->text}}</pre></div>
+                                                        <div class="col-span-7 px-4 py-3 border-r">
+                                                            <h3>{{$action->description}}</h3><br>
+                                                            <pre class="whitespace-pre-wrap font-mono">{{$action->text}}</pre>
+                                                        </div>
                                                     @endif
                                                     <div class="col-span-2 px-4 py-2 border-r">{{ \Carbon\Carbon::parse($action->date_logged)->format('Y-m-d')}}</div>
-                                                    @if($meetingMinuteState == 'started')
+                                                    @if($meetingMinuteState == 'started' or
+                                                        $meetingMinuteState == 'Active')
                                                         <div class="col-span-2 px-4 py-2">
                                                             <div class="flex flex-wrap">
                                                                 <div class="w-1/2 px-2 mb-2">
@@ -261,17 +283,23 @@
                                                     @foreach($action->meetingMinuteActionFeedbacks as $feedback)
                                                         <div class="grid grid-cols-10 border-b bg-blue-100 border-gray-300 bg-gray-50">
                                                             <div class="col-span-1 px-4 py-2 border-r"></div>
-                                                            @if($meetingMinuteState == 'started')
-                                                                <div class="col-span-5 px-4 py-2 border-r"><pre>{{$feedback->text}}</pre></div>
+                                                            @if($meetingMinuteState == 'started' or
+                                                                $meetingMinuteState == 'Active')
+                                                                <div class="col-span-5 px-4 py-2 border-r">
+                                                                    <pre class="whitespace-pre-wrap font-mono">{{$feedback->text}}</pre>
+                                                                </div>
                                                             @else
-                                                                <div class="col-span-7 px-4 py-2 border-r"><pre>{{$feedback->text}}</pre></div>
+                                                                <div class="col-span-7 px-4 py-2 border-r">
+                                                                    <pre class="whitespace-pre-wrap font-mono">{{$feedback->text}}</pre>
+                                                                </div>
                                                             @endif    
                                                             <div class="col-span-2 px-4 py-2 border-r">{{ \Carbon\Carbon::parse($feedback->date_logged)->format('Y-m-d')}}</div>
-                                                            @if($meetingMinuteState == 'started')
+                                                            @if($meetingMinuteState == 'started' or
+                                                                $meetingMinuteState == 'Active')
                                                                 <div class="col-span-2 px-4 py-2">
                                                                     <div class="flex flex-wrap">
                                                                         @if(strtotime($feedback->date_logged) == strtotime($meetingMinuteDate))
-                                                                            <div class="w-1/3 px-2 mb-2">
+                                                                            <div class="w-1/2 px-2 mb-2">
                                                                                 <button wire:click="editFeedback({{$feedback->id}})"
                                                                                         class="bg-{{$feedbackButtonColor}}-500 hover:bg-{{$feedbackButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
                                                                                     <i class="fas fa-edit"  title="Edit Feedback"></i>
@@ -279,7 +307,7 @@
                                                                             </div>
                                                                         @endif    
                                                                         @if(strtotime($feedback->date_logged) == strtotime($meetingMinuteDate))
-                                                                            <div class="w-1/3 px-2">
+                                                                            <div class="w-1/2 px-2">
                                                                                 <button wire:click="removeFeedback({{$feedback->id}})"
                                                                                         class="bg-{{$feedbackButtonColor}}-500 hover:bg-{{$feedbackButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
                                                                                     <i class="fas fa-trash" title="Remove Feedback"></i>
@@ -652,7 +680,7 @@
                                             @endif
                                             <button wire:click="hideAddFeedback"
                                                     type="button" 
-                                                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                                    class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                                                 Cancel
                                             </button>
                                         </div>
@@ -668,7 +696,8 @@
                                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >
                                 ← back
                             </button>
-                            @if($meetingMinuteState == "started")
+                            @if($meetingMinuteState == "started" or
+                                $meetingMinuteState == 'Active')
                                 <button wire:click="showEndMeeting"
                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >
                                     End Meeting

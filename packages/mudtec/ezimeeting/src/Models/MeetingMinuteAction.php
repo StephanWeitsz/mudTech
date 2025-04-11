@@ -32,7 +32,7 @@ class MeetingMinuteAction extends Model
 
     public function meetingMinuteActionFeedbacks()
     {
-        return $this->hasMany(MeetingMinuteActionfeedback::class);
+        return $this->hasMany(MeetingMinuteActionFeedback::class);
     }
 
     public function meetingMinuteActionStatus()

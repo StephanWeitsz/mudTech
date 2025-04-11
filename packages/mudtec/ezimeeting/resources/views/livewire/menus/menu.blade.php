@@ -16,7 +16,7 @@
                         </a>
                     @else
                         <a href="{{ route('dashboard') }}" style="display: flex; align-items: center;">
-                            <span class="text-yellow-500 text-xl ml-2">&lt;{{ config('app.name', 'mudTeck*') }}&gt;</span> eziMeeting**
+                            <span class="text-yellow-500 text-xl ml-2">&lt;{{ config('app.name', 'mudTech') }}&gt;</span> eziMeeting**
                         </a>
                     @endif
                 </div>

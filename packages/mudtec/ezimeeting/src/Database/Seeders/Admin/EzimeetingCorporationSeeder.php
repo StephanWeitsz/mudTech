@@ -17,7 +17,7 @@ class EzimeetingCorporationSeeder extends Seeder
     public function run(): void
     {
         Corporation::create([
-            'name' => 'mudTECK',
+            'name' => 'mudTECH',
             'description' => fake()->text(200),
             'text' => fake()->text(200),
             'website' => fake()->url,

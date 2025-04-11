@@ -14,7 +14,7 @@
                     <label for="title" class="block text-lg font-medium text-gray-700 mb-2">Corporation</label>
                     <div class="border-2 border-gray-300 rounded-md p-2">
                         <img src="{{ get_corporation_logo($meeting->department_id) ?? 'https://placehold.co/60' }}" 
-                             alt="Corporation Logo" class="w-60 h-60 object-cover rounded-md">
+                             alt="Corporation Logo" class="w-50 h-50 object-cover rounded-md">
                     </div>
                     <p id="title" class="text-lg text-gray-900 text-center mt-2">
                         {{ get_corporation_name($meeting->department_id) }}

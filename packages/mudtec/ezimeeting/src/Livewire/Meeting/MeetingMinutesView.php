@@ -61,8 +61,10 @@ class MeetingMinutesView extends Component
     }
 
     public function listMeetingMinutes($meetingId) {
+
         Log::info('list meeting minute');
-            
+        dd('list meeting minute');
+        //return redirect()->route('viewMeetingMinutes', ['meeting' => $meetingId, 'minute' => $minutesId]);
     }
 
     public function render()

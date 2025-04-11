@@ -7,7 +7,7 @@
     @include('ezimeeting::livewire.includes.warnings.error')
 
     <div class="container mx-auto bg-white shadow-md rounded-lg p-6 w-3/4">
-        <form wire:submit="update" enctype="multipart/form-data">
+        <form wire:submit="update">
             <div class="mb-4">
                 <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                 <input type="text" wire:model="name" id="name" class="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring-blue-300">
@@ -48,12 +48,6 @@
                 @error('logo') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
             </div>
 
-            <div class="mb-4">
-                <label for="secret" class="block text-sm font-medium text-gray-700">Secret</label>
-                <input type="password" wire:model="secret" id="secret" class="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring-blue-300">
-                @error('secret') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-            </div>
-
             <div wire:loading wire:target="logo">
                 <span class="text-green-500 m-2">Uploading ...</span>
             </div>
@@ -62,7 +56,13 @@
                     <span class="text-gray-900"><h2>Preview</h2></span>
                     <img class="rounded w-32 h-32 mt-5 mb-5 block" src="{{ $logo->temporaryUrl() }}" alt="">
                 </div>
-            @endif 
+            @endif
+            
+            <div class="mb-4">
+                <label for="secret" class="block text-sm font-medium text-gray-700">Secret</label>
+                <input type="password" wire:model="secret" id="secret" class="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring-blue-300">
+                @error('secret') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+            </div>
 
             <div class="flex items-center justify-between w-full">
                 <a href="{{ route('corporations') }}" class="inline-flex items-center px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700">

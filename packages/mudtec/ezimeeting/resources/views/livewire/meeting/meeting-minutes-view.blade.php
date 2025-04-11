@@ -15,9 +15,9 @@
                         {{ $date }} <br> {{ strtoupper($mm->state) }}
                     </button>
                 @endforeach
-                @if(count($meetingMinutes) == 3)
-                    <button wire:click='listMeetingMinutes({{ $meetingId }})' class="bg-green-500 text-white py-5 px-10 rounded mb-2">More...</button>
-                @endif
+                {{--@if(count($meetingMinutes) == 3)--}}
+                    <button wire:click='listMeetingMinutes({{ $meetingId }})' class="bg-blue-500 text-white py-5 px-10 rounded mb-2">More...</button>
+                {{--@endif--}}
             </div>
                 
         </div>        

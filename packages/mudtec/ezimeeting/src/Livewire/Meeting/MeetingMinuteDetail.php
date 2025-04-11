@@ -78,7 +78,7 @@ class MeetingMinuteDetail extends Component
     public $feedbackButtonColor = 'blue';
 
     public $page_heading = 'Meeting Minutes';
-    public $page_sub_heading = 'Capture First Sitting'; 
+    public $page_sub_heading = ''; 
 
 
     public function mount($meetingId, $minutesId) 
@@ -678,13 +678,16 @@ class MeetingMinuteDetail extends Component
         
         if (empty($this->minutesId)) {
             $this->meetingMinute = "";
+            $this->page_sub_heading = 'Capture mieetings minutes'; 
+
         } else {
             $this->meetingMinute = MeetingMinute::find($this->minutesId);
             $this->meetingMinuteDate = $this->meetingMinute->date;
             $this->meetingMinuteState = $this->meetingMinute->state; 
             
             $this->meetingMinuteItems = $this->meetingMinute->meetingMinuteItems()->get();
-            
+
+            $this->page_sub_heading = 'Meeting Minutes for ' . \Carbon\Carbon::parse($this->meetingMinuteDate)->format('Y-m-d');    
         } 
 
         Log::info("render new-meeting-minute");

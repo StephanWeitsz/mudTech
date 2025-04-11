@@ -49,8 +49,18 @@ class CorporationEdit extends Component
             'secret' => 'required',
         ]);
 
-        if($this->logo)
-            $logoPath = $this->logo->store('corporate/logos', 'public');
+        dd($this->logo);
+
+        if($this->logo) {
+            try {
+                $logoPath = $this->logo->store('corporate/logos', 'public');
+            }
+            catch(Exception $e) {
+                session()->flash('error', $e->getMessage());
+                Log::error($e->getMessage());
+                return;
+            } 
+        }
         else
             $logoPath = $this->logoPath;     
 

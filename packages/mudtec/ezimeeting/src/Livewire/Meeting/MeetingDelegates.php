@@ -81,12 +81,12 @@ class MeetingDelegates extends Component
         $this->meeting_url = $this->meeting->external_url;
 
         $this->corporation = Corporation::where('id', $corpId)->first();
-      
+        
         $this->assUsers = MeetingDelegate::where('meeting_id', $this->meetingId)
             ->where('is_active', true)
             ->where(function ($query) {
-                $query->whereRaw('LOWER(delegate_name)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
-                      ->orWhereRaw('LOWER(delegate_email)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
+                $query->whereRaw('LOWER(delegate_name) LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
+                      ->orWhereRaw('LOWER(delegate_email) LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
             })
             ->get();
     }

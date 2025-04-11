@@ -23,8 +23,8 @@
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
         <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
             <div class="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
-                <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
-                    <header class="grid grid-cols-2 items-right gap-2 py-10 lg:grid-cols-3">
+                <div class="relative w-full max-w-2xl px-2 lg:max-w-7xl">
+                    <header class="grid grid-cols-2 items-right gap-2 py-5 lg:grid-cols-3">
                         <div class="flex lg:justify-center lg:col-start-2">
                         </div>
                         @if (Route::has('login'))
@@ -64,9 +64,11 @@
                     </header>
 
                     <div class="flex lg:justify-center lg:col-start-2">
-                        <img class="h-5% w-auto" src="{{ asset('images/MUD-TECH logo.jpg') }}" alt="mudTech logo">
+                        <div class="bg-white p-4 rounded shadow inline-block px-10">
+                            <img class="h-32 w-auto" src="{{ asset('images/MUD-TECH logo.jpg') }}" alt="mudTech logo">
+                        </div>
                     </div>
-
+                    
                     <main class="mt-6">
                         <div class="grid gap-6 lg:grid-cols-3 lg:gap-8">
                             <!-- Card 1 -->
@@ -75,7 +77,8 @@
                                 id="card-1"
                                 class="flex flex-col items-start gap-6 overflow-hidden rounded-lg bg-white p-6 shadow-md ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-blue-500 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-blue-500"
                             >
-                                <div id="screenshot-container-1" class="relative flex w-full flex-1 items-stretch">
+                                <div id="screenshot-container-1" 
+                                     class="relative flex w-full flex-1 items-stretch">
                                     <img
                                         src="{{ asset('images/servers.jpg') }}"
                                         alt="Servers image"
@@ -101,9 +104,11 @@
                             <!-- Card 2 -->
                             <a
                                 href="#"
-                                class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-md ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-blue-500 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-blue-500"
+                                id="card-2"
+                                class="flex flex-col items-start gap-6 overflow-hidden rounded-lg bg-white p-6 shadow-md ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-blue-500 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-blue-500"
                             >
-                                <div id="screenshot-container-2" class="relative flex w-full flex-1 items-stretch border border-red">
+                                <div id="screenshot-container-2" 
+                                     class="relative flex w-full flex-1 items-stretch">
                                     <img
                                         src="{{ asset('images/security.jpg') }}"
                                         alt="Security image"
@@ -111,7 +116,7 @@
                                     />
                                 </div>
                                 <div class="relative flex items-center gap-6 lg:items-end">
-                                    <div id="card-1-content" class="flex items-start gap-6 lg:flex-col">
+                                    <div id="card-2-content" class="flex items-start gap-6 lg:flex-col">
                                         <div class="pt-3 sm:pt-5">
                                             <h2 class="text-xl font-semibold text-black dark:text-white">Security</h2>
                                             <p class="mt-4 text-sm text-gray-700 dark:text-gray-300">
@@ -129,9 +134,11 @@
                             <!-- Card 3 -->
                             <a
                                 href="#"
-                                class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-md ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-blue-500 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-blue-500"
+                                id="card-3"
+                                class="flex flex-col items-start gap-6 overflow-hidden rounded-lg bg-white p-6 shadow-md ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-blue-500 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-blue-500"
                             >
-                                <div id="screenshot-container-3" class="relative flex w-full flex-1 items-stretch">
+                                <div id="screenshot-container-3" 
+                                     class="relative flex w-full flex-1 items-stretch">
                                     <img
                                         src="{{ asset('images/software.jpg') }}"
                                         alt="Softeware Development image"
@@ -139,11 +146,11 @@
                                     />
                                 </div>
                                 <div class="relative flex items-center gap-6 lg:items-end">
-                                    <div id="card-1-content" class="flex items-start gap-6 lg:flex-col">
+                                    <div id="card-3-content" class="flex items-start gap-6 lg:flex-col">
                                         <div class="pt-3 sm:pt-5">
                                             <h2 class="text-xl font-semibold text-black dark:text-white">Software Development</h2>
                                             <p class="mt-4 text-sm text-gray-700 dark:text-gray-300">
-                                                MudTeck offers software development services is responsible for creating customized software solutions that meet a customer's specific business needs. This involves understanding the customer's objectives, requirements, and challenges to design, develop, and deploy scalable and efficient applications. The development process typically includes requirements gathering, system design, coding, and testing to ensure the software performs as expected. Additionally, the company provides ongoing maintenance and updates to improve the software’s functionality and fix any issues that arise post-deployment. The development team may also offer integration services to ensure the new software works seamlessly with existing systems. Whether building web applications, mobile apps, or enterprise solutions, the company ensures the final product is user-friendly, secure, and optimized for performance. The goal is to enhance the customer’s operations, improve productivity, and drive innovation through tailor-made software solutions.
+                                                MudTech offers software development services is responsible for creating customized software solutions that meet a customer's specific business needs. This involves understanding the customer's objectives, requirements, and challenges to design, develop, and deploy scalable and efficient applications. The development process typically includes requirements gathering, system design, coding, and testing to ensure the software performs as expected. Additionally, the company provides ongoing maintenance and updates to improve the software’s functionality and fix any issues that arise post-deployment. The development team may also offer integration services to ensure the new software works seamlessly with existing systems. Whether building web applications, mobile apps, or enterprise solutions, the company ensures the final product is user-friendly, secure, and optimized for performance. The goal is to enhance the customer’s operations, improve productivity, and drive innovation through tailor-made software solutions.
                                             </p>
                                         </div>
 
