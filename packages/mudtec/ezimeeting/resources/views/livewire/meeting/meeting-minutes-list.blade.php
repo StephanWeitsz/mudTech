@@ -21,24 +21,24 @@
                             </tr>
                         </thead>
                         <tbody class="text-gray-600 text-sm font-light">
-                            {{--@foreach($meetings as $meeting)--}}
+                            @foreach($meetingMinutes as $meeting)
                                 <tr class="border-b border-gray-200 bg-gray-100 hover:bg-gray-200 hover:border-gray-300">
                                     <td class="py-3 px-6 text-left whitespace-nowrap">                                        
                                         <div class="flex flex-col items-center">
-                                            
+                                            {{ \Carbon\Carbon::parse($meeting->date)->format('Y-m-d') }}
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-left whitespace-nowrap">
-                        
+                                        {{ $meeting->state }}
                                     </td>
                                     <td class="py-3 px-6 text-left">
-                        
+                                        {{$meeting->meetingMinuteItems()->where('date_closed', null)->count()}}
                                     </td>
                         
                                     <td class="py-3 px-6 text-left items-center justify-between space-x-2">
                                         <div class="flex items-center space-x-2">
                                             
-                                            <button wire:click="edit({{ $meeting->id }})" class="text-sm text-black font-semibold rounded hover:text-teal-800 mr-1" title="Edit Meeting">
+                                            <button wire:click="edit({{ $meetingId }},{{ $meeting->id }})" class="text-sm text-black font-semibold rounded hover:text-teal-800 mr-1" title="Edit Meeting">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                                     stroke="currentColor" class="w-8 h-8">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -53,6 +53,8 @@
                         </tbody>
                     </table>
                 </div>
+
+
                 {{--
                 @if (!$meetings->isEmpty())
                     {{ $meetings->links() }}
@@ -60,4 +62,9 @@
                 --}}
         </div>
     </div>
+
+    <button wire:click="back" class="inline-flex items-center m-2 px-6 py-3 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700">
+        ← Back
+    </a>
+
 </div>

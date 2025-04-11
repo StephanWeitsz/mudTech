@@ -670,7 +670,10 @@ class MeetingMinuteDetail extends Component
     }
 
     public function back() {
-        return redirect()->route('meetingView', ['meeting' => $this->meetingId]);
+
+        //return redirect()->route('meetingView', ['meeting' => $this->meetingId]);
+
+        return redirect()->route('MeetingMinuteList', ['meetingId' => $this->meetingId]);
     }
     
     ////////////////////////////////////////////////////

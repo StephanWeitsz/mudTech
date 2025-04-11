@@ -22,11 +22,23 @@ class MeetingMinutesList extends Component
     public $meetingStatus;
     public $meetingMinutes;
 
-    public $page_heading = 'Meeting List';
+    public $page_heading = 'Meeting Minutes';
+    public $page_sub_heading = 'List';
 
-    public function mount($meetingId, $minutesId) 
+    public function mount($meetingId) 
     {
+        $this->meetingMinutes = MeetingMinute::where('meeting_id', $meetingId)
+        ->orderBy('created_at', 'desc')
+        ->get();
+    }
 
+    public function edit($meetingId, $minutesId)
+    {
+        return redirect()->route('viewMeetingMinutes', ['meeting' => $meetingId, 'minute' => $minutesId]);
+    }
+
+    public function back() {
+        return redirect()->route('meetingView', ['meeting' => $this->meetingId]);
     }
 
     public function render()
