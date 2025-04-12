@@ -104,4 +104,9 @@ class Meeting extends Model
         return $this->belongsTo(MeetingLocation::class);
     }
 
+    public function minutes()
+    {
+        return $this->hasMany(MeetingMinute::class);
+    }
+
 }

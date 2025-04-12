@@ -84,6 +84,8 @@ Route::middleware('web')->group(function () {
     Route::get('/eziMeeting/meeting/{meeting}/minute', [MeetingController::class, 'MinutesDetail'])->name('MeetingMinuteDetails');
     Route::get('/eziMeeting/meeting/{meeting}/minute/{minute}', [MeetingController::class, 'viewMinutes'])->name('viewMeetingMinutes');
 
+    Route::get('/eziMeeting/meeting/calander', [MeetingController::class, 'viewCalander'])->name('viewMeetingCalander');
+
     Route::get('/eziMeeting/about', [HomeController::class, 'about'])->name('about');
     Route::get('/eziMeeting/contact', [HomeController::class, 'contact'])->name('contact');
     Route::post('/eziMeeting/contact/send', [HomeController::class, 'contactSubmit'])->name('contact.submit');

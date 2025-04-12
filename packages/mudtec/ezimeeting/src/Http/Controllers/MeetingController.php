@@ -68,4 +68,7 @@ class MeetingController extends Controller
     }
 
 
+    public function viewCalander() {
+        return view('ezimeeting::meeting.calander');
+    }
 }

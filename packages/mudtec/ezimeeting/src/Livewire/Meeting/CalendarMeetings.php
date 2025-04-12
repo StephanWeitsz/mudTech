@@ -12,6 +12,9 @@ class CalendarMeetings extends Component
     public $currentMonth;
     public $currentYear;
 
+    public $page_heading = 'Meeting Calandar';
+    public $page_sub_heading = 'View Scheduled Meetings';
+
     public function mount()
     {
         $now = Carbon::now();
@@ -42,7 +45,15 @@ class CalendarMeetings extends Component
             ->whereBetween('date', [$start, $end])
             ->get();
 
-        return view('livewire.calendar-meetings', [
+            $meetings = Meeting::with('minutes')
+    ->whereHas('minutes', function ($query) use ($start, $end) {
+        $query->whereBetween('date', [$start, $end]);
+    })
+    ->get();
+
+        //dd($start,$end,$meetings);    
+
+        return view('ezimeeting::livewire.meeting.calendar-meetings', [
             'meetings' => $meetings,
             'startOfMonth' => $start,
         ]);
