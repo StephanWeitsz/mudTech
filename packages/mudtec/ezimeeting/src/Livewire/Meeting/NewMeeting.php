@@ -19,7 +19,6 @@ class NewMeeting extends Component
     public $intervals;
     public $locations;
     
-
     public $user;
     public $corpId;
     public $corporations;

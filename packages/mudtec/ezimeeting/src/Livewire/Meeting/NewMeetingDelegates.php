@@ -64,8 +64,9 @@ class NewMeetingDelegates extends Component
                   ->where('is_active', true);
         })
         ->where(function ($query) {
-            $query->whereRaw('LOWER(name)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
-                  ->orWhereRaw('LOWER(description)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
+            $searchTerm = '%' . mb_strtolower($this->search) . '%';
+            $query->whereRaw('LOWER(name) LIKE ?', [$searchTerm])
+                  ->orWhereRaw('LOWER(email) LIKE ?', [$searchTerm]);
         })
         ->get();
         
@@ -85,8 +86,8 @@ class NewMeetingDelegates extends Component
         $this->assUsers = MeetingDelegate::where('meeting_id', $this->meetingId)
             ->where('is_active', true)
             ->where(function ($query) {
-                $query->whereRaw('LOWER(delegate_name)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
-                      ->orWhereRaw('LOWER(delegate_email)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
+                $query->whereRaw('LOWER(delegate_name) LIKE ?', ['%' . mb_strtolower($this->search) . '%'])
+                      ->orWhereRaw('LOWER(delegate_email) LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
             })
             ->get();
     }

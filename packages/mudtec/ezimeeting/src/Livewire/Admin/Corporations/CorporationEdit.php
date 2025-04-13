@@ -49,8 +49,6 @@ class CorporationEdit extends Component
             'secret' => 'required',
         ]);
 
-        dd($this->logo);
-
         if($this->logo) {
             try {
                 $logoPath = $this->logo->store('corporate/logos', 'public');

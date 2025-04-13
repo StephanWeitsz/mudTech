@@ -31,7 +31,7 @@
 
                 <div class="mb-4 w-1/5">
                     <label class="block text-gray-600">Date Formula</label>
-                    <input type="number" wire:model="formula" class="w-full p-2 border rounded focus:ring focus:ring-blue-300">
+                    <input type="text" wire:model="formula" class="w-full p-2 border rounded focus:ring focus:ring-blue-300">
                     @error('formula') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 

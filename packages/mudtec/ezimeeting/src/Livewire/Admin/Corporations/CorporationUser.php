@@ -79,9 +79,11 @@ class CorporationUser extends Component
             else {
                 $availableUsers = User::whereDoesntHave('corporations')
                 ->where(function ($query) {
-                    $query->whereRaw('LOWER(name)', 'LIKE ?', ['%' . mb_strtolower($search) . '%'])
-                        ->orWhereRaw('LOWER(email)', 'LIKE ?', ['%' . mb_strtolower($search) . '%']);
+                    $searchTerm = '%' . mb_strtolower($this->search) . '%';
+                    $query->whereRaw('LOWER(name) LIKE ?', [$searchTerm])
+                          ->orWhereRaw('LOWER(email) LIKE ?', [$searchTerm]);
                 })->paginate(20);
+
                 if(!$availableUsers)
                     $availableUsers = collect();
             } //else
@@ -90,9 +92,11 @@ class CorporationUser extends Component
                 $query->where('corporations.id', $this->selectedCorporation);
             })
             ->where(function ($query) {
-                $query->whereRaw('LOWER(name)', 'LIKE ?', ['%' . mb_strtolower($search) . '%'])
-                    ->orWhereRaw('LOWER(email)', 'LIKE ?', ['%' . mb_strtolower($search) . '%']);
+                $searchTerm = '%' . mb_strtolower($this->search) . '%';
+                $query->whereRaw('LOWER(name) LIKE ?', [$searchTerm])
+                      ->orWhereRaw('LOWER(email) LIKE ?', [$searchTerm]);
             })->paginate(20);
+
             if(!$assignedUsers)
                 $assignedUsers = collect();
 

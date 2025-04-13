@@ -96,7 +96,7 @@ class MeetingMinuteDetail extends Component
             'meetingMinuteTranscript' => ['nullable', 'file', 'mimes:txt,pdf,doc,docx', 'max:10240'], // max 10MB
         ]);
 
-        $meetingStatusId = MeetingStatus::where('description','In Progress')->first();
+        $meetingStatusId = MeetingStatus::where('description','In-Progress')->first();
         Meeting::where('id', $this->meetingId)->update(['meeting_status_id' => $meetingStatusId->id]); 
                  
         $Data['date'] = $this->meetingMinuteDate;
