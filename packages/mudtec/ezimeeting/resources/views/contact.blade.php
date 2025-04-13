@@ -16,27 +16,29 @@
         <form action="{{ route('contact.submit') }}" method="POST" class="bg-white shadow-md rounded-lg p-8 space-y-6">
             @csrf
 
-            <div>
+            <div class="mb-4">
                 <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                 <input type="text" name="name" id="name" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    class="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring-blue-300">
+                @error('name') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
             </div>
 
-            <div>
+            <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                 <input type="email" name="email" id="email" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    class="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring-blue-300">
+                @error('email') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
             </div>
 
-            <div>
+            <div class="mb-4">
                 <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
                 <textarea name="message" id="message" rows="5" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                    class="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring-blue-300"></textarea>
             </div>
 
             <div>
                 <button type="submit"
-                    class="w-full bg-indigo-600 text-white py-3 px-6 rounded-md font-semibold hover:bg-indigo-700 transition">
+                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700">
                     Send Message
                 </button>
             </div>

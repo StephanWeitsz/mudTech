@@ -23,6 +23,7 @@ class CorporationList extends Component
     public function delete($corporation) {
         try {
             Corporation::findOrfail($corporation)->delete();
+            session()->flash('success', 'Corporation removed!');
         } catch(Exception $e) {
             request()->session()->flash('error', 'Delete Failed!');
             return;

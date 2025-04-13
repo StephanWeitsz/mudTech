@@ -3,6 +3,7 @@
         @include('ezimeeting::livewire.includes.heading.admin-heading')
 
         <div class="container mx-auto py-8">
+            
             @include('ezimeeting::livewire.includes.warnings.success')
             @include('ezimeeting::livewire.includes.warnings.error')
 
