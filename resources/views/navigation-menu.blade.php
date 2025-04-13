@@ -148,6 +148,15 @@
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{  url('/eziMeeting')  }}" :active="request()->routeIs('eziMeeting')">
+                {{ __('eziMeeting') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{  url('/telescope')  }}" :active="request()->routeIs('eziMeeting')">
+                {{ __('Telescope') }}
+            </x-responsive-nav-link>
+
         </div>
 
         <!-- Responsive Settings Options -->

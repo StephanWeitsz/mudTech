@@ -78,7 +78,7 @@
                                 class="flex flex-col items-start gap-6 overflow-hidden rounded-lg bg-white p-6 shadow-md ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-blue-500 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-blue-500"
                             >
                                 <div id="screenshot-container-1" 
-                                     class="relative flex w-full flex-1 items-stretch">
+                                     class="relative w-full h-[220px] overflow-hidden rounded-[10px]">
                                     <img
                                         src="{{ asset('images/servers.jpg') }}"
                                         alt="Servers image"
@@ -89,15 +89,26 @@
                                     <div id="card-1-content" class="flex items-start gap-6 lg:flex-col">
                                         <div class="pt-3 sm:pt-5 lg:pt-0">
                                             <h2 class="text-xl font-semibold text-black dark:text-white">Servers</h2>
-                                            <p class="mt-4 text-sm text-gray-700 dark:text-gray-300">
-                                                Mudtech provids server management services delivers a comprehensive suite of tasks to ensure that a customer's servers operate efficiently, securely, and reliably. This includes monitoring server performance 24/7, addressing any issues that may arise, and proactively maintaining the hardware and software. The company ensures that security updates and patches are regularly applied to protect the servers from vulnerabilities. They also manage backups to prevent data loss, handle the configuration of servers based on specific needs, and optimize performance to meet business demands. Additionally, they provide troubleshooting support and resolve any technical problems swiftly, minimizing downtime. Ultimately, the company ensures that the customer's IT infrastructure runs smoothly, allowing them to focus on their core business activities while having peace of mind knowing their servers are in expert hands.
+                                            <p class="mt-4 text-sm text-gray-700 dark:text-gray-300 pb-3">
+                                                Mudtech provids server setup, administration and management.
+                                                <ul class="list-disc pl-6 space-y-2 text-gray-800 dark:text-gray-200 px-5">
+                                                    <li>
+                                                        Windows Servers
+                                                        <ul class="list-disc pl-6 mt-1 space-y-1 px-3">
+                                                            <li>Active Directory</li>
+                                                            <li>Exchange</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>Linux Servers</li>
+                                                    <li>Hosting</li>
+                                                </ul>
                                             </p>
                                         </div>
+                                    
+                                        <svg class="size-6 shrink-0 self-center stroke-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/>
+                                        </svg>
                                     </div>
-
-                                    <svg class="size-6 shrink-0 stroke-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/>
-                                    </svg>
                                 </div>
                             </a>
 
@@ -108,7 +119,7 @@
                                 class="flex flex-col items-start gap-6 overflow-hidden rounded-lg bg-white p-6 shadow-md ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-blue-500 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-blue-500"
                             >
                                 <div id="screenshot-container-2" 
-                                     class="relative flex w-full flex-1 items-stretch">
+                                     class="relative w-full h-[220px] overflow-hidden rounded-[10px]">
                                     <img
                                         src="{{ asset('images/security.jpg') }}"
                                         alt="Security image"
@@ -117,10 +128,16 @@
                                 </div>
                                 <div class="relative flex items-center gap-6 lg:items-end">
                                     <div id="card-2-content" class="flex items-start gap-6 lg:flex-col">
-                                        <div class="pt-3 sm:pt-5">
+                                        <div class="pt-3 sm:pt-5 lg:pt-0">
                                             <h2 class="text-xl font-semibold text-black dark:text-white">Security</h2>
-                                            <p class="mt-4 text-sm text-gray-700 dark:text-gray-300">
-                                                MudTech provids security services focuses on safeguarding a customer's IT infrastructure from potential threats and breaches. This includes implementing robust firewalls, intrusion detection systems, and encryption protocols to protect sensitive data both in transit and at rest. The company conducts regular security audits and vulnerability assessments to identify potential weaknesses and mitigate risks. They also monitor systems continuously for unusual activity or unauthorized access, providing real-time alerts and response strategies. In addition, the company ensures compliance with industry-specific regulations and standards to prevent data breaches and maintain privacy. The team may also train staff on best security practices and provide incident response in the event of a cyber attack. Overall, the company delivers peace of mind by securing the customer's digital assets and ensuring their network remains resilient against evolving security threats.
+                                            <p class="mt-4 text-sm text-gray-700 dark:text-gray-300 pb-3">
+                                                Mudtech provids consultantcy service on securing server and application environments.
+                                                <ul class="list-disc pl-6 space-y-2 text-gray-800 dark:text-gray-200 px-5">
+                                                    <li>Patch Management</li>
+                                                    <li>Anti-Virus Services</li>
+                                                    <li>DevSecOps</li>
+                                                    <li>Disaster Recovery (DR)</li>
+                                                </ul>
                                             </p>
                                         </div>
 
@@ -138,7 +155,7 @@
                                 class="flex flex-col items-start gap-6 overflow-hidden rounded-lg bg-white p-6 shadow-md ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-blue-500 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-blue-500"
                             >
                                 <div id="screenshot-container-3" 
-                                     class="relative flex w-full flex-1 items-stretch">
+                                     class="relative w-full h-[220px] overflow-hidden rounded-[10px]">
                                     <img
                                         src="{{ asset('images/software.jpg') }}"
                                         alt="Softeware Development image"
@@ -147,10 +164,26 @@
                                 </div>
                                 <div class="relative flex items-center gap-6 lg:items-end">
                                     <div id="card-3-content" class="flex items-start gap-6 lg:flex-col">
-                                        <div class="pt-3 sm:pt-5">
+                                        <div class="pt-3 sm:pt-5 lg:pt-0">
                                             <h2 class="text-xl font-semibold text-black dark:text-white">Software Development</h2>
-                                            <p class="mt-4 text-sm text-gray-700 dark:text-gray-300">
-                                                MudTech offers software development services is responsible for creating customized software solutions that meet a customer's specific business needs. This involves understanding the customer's objectives, requirements, and challenges to design, develop, and deploy scalable and efficient applications. The development process typically includes requirements gathering, system design, coding, and testing to ensure the software performs as expected. Additionally, the company provides ongoing maintenance and updates to improve the software’s functionality and fix any issues that arise post-deployment. The development team may also offer integration services to ensure the new software works seamlessly with existing systems. Whether building web applications, mobile apps, or enterprise solutions, the company ensures the final product is user-friendly, secure, and optimized for performance. The goal is to enhance the customer’s operations, improve productivity, and drive innovation through tailor-made software solutions.
+                                            <p class="mt-4 text-sm text-gray-700 dark:text-gray-300 pb-3">
+                                                Mudtech provids software development resources for.
+                                                <ul class="list-disc pl-6 space-y-2 text-gray-800 dark:text-gray-200 px-5">
+                                                    <li> Business Analysis </li>
+                                                    <li> Systems Analysis </li> 
+                                                    <li>
+                                                        PHP Systems Development
+                                                        <ul class="list-disc pl-6 mt-1 space-y-1 px-3">
+                                                            <li>Laravel</li>
+                                                            <li>Livewire</li>
+                                                            <li>JetStream</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>Wordpress</li>
+                                                    <li>Python</li>
+                                                    <li>VB Scripting</li>
+                                                    <li>Micro Controller Automation</li>
+                                                </ul>
                                             </p>
                                         </div>
 
