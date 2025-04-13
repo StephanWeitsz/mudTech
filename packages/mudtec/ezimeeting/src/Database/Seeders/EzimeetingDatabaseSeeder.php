@@ -22,7 +22,7 @@ class EzimeetingDatabaseSeeder extends Seeder
             \Mudtec\Ezimeeting\Database\Seeders\Admin\EzimeetingDelegateRoleSeeder::class,
             \Mudtec\Ezimeeting\Database\Seeders\Admin\EzimeetingMeetingIntervalSeeder::class,
             \Mudtec\Ezimeeting\Database\Seeders\Admin\EzimeetingMeetingLocationSeeder::class,
-            \Mudtec\Ezimeeting\Database\Seeders\Meeting\EzimeetingMeetingSeeder::class,
+            //\Mudtec\Ezimeeting\Database\Seeders\Meeting\EzimeetingMeetingSeeder::class,
         ]);
     }
 }
