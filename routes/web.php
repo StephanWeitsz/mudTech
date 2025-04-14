@@ -2,7 +2,6 @@
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -16,6 +15,11 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+use App\Http\Controllers\ImageUploadController;
+Route::get('/image-upload', [ImageUploadController::class, 'showForm']);
+Route::post('/image-upload', [ImageUploadController::class, 'upload'])->name('image.upload');
+
 
 
 /*

@@ -377,7 +377,7 @@
                                                         @error('itemText') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                                                     </div>
 
-                                                    @if($editingItemId))
+                                                    @if($editingItemId)
                                                         <div class="mb-4">
                                                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mt-4" for="itemLogged">
                                                                 Date Logged

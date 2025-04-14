@@ -5,6 +5,7 @@
         <meta name="keywords" content="meeting minutes">
 		<meta name="description" content="ezi-Meeting : maintain meeting minutes per department ion an orginazation">
 		<meta name='copyright' content='2024'>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -19,19 +20,18 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         
-
         <!-- Custom styles -->
         <link rel="stylesheet" href="{{asset('css/app.css')}}">
+
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
-
         <x-menu.load></x-menu.load>
-
-        
         @yield('content')
-    
-
         <x-footer.load></x-footer.load>
-        
+
+        @stack('modals')
+        @livewireScripts
     </body>
 </html>
