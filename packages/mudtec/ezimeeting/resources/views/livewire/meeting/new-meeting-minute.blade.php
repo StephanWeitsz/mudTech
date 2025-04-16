@@ -153,7 +153,12 @@
                                                     <pre class="whitespace-pre-wrap font-mono">{{$note->text}}</pre>
                                                 </div>
                                             @endif
-                                            <div class="col-span-2 px-4 py-2 border-r">{{ \Carbon\Carbon::parse($note->date_logged)->format('Y-m-d')}}</div>
+                                            <div class="col-span-2 px-4 py-2 border-r">
+                                                log: {{ \Carbon\Carbon::parse($note->date_logged)->format('Y-m-d')}}
+                                                @if($note->date_closed)
+                                                    Clo: {{ \Carbon\Carbon::parse($note->date_closed)->format('Y-m-d')}}
+                                                @endif
+                                            </div>
                                             @if($meetingMinuteState == 'started' or
                                                 $meetingMinuteState == 'Active')
                                                 <div class="col-span-2 px-4 py-2">
@@ -210,6 +215,7 @@
                                                             <br>
                                                             <pre class="whitespace-pre-wrap font-mono">{{$action->text}}</pre>
                                                         
+                                                            {{--@dump($action->delegates)--}}
                                                             @if($action->delegates->isNotEmpty())
                                                                 <div class="mt-5 p-2 border border-red-200 bg-gray-300"> 
                                                                     <strong>OWNER</strong>
@@ -231,7 +237,21 @@
                                                             <pre class="whitespace-pre-wrap font-mono">{{$action->text}}</pre>
                                                         </div>
                                                     @endif
-                                                    <div class="col-span-2 px-4 py-2 border-r">{{ \Carbon\Carbon::parse($action->date_logged)->format('Y-m-d')}}</div>
+                                                    <div class="col-span-2 px-4 py-2 border-r sm-text">
+                                                        Log: {{ \Carbon\Carbon::parse($action->date_logged)->format('Y-m-d')}}
+                                                        @if($action->date_due)
+                                                            @if($action->date_due_revised)
+                                                                Due: {{ \Carbon\Carbon::parse($action->date_due_revised)->format('Y-m-d')}} <br>
+                                                                     <del>{{ \Carbon\Carbon::parse($action->date_due)->format('Y-m-d')}}</del>
+                                                            @else
+                                                                Due: {{ \Carbon\Carbon::parse($action->date_due)->format('Y-m-d')}}
+                                                            @endif    
+                                                        @endif
+
+                                                        @if($action->date_closed)
+                                                            Clo: {{ \Carbon\Carbon::parse($action->date_closed)->format('Y-m-d')}}
+                                                        @endif
+                                                    </div>
                                                     @if($meetingMinuteState == 'started' or
                                                         $meetingMinuteState == 'Active')
                                                         <div class="col-span-2 px-4 py-2">
@@ -293,7 +313,9 @@
                                                                     <pre class="whitespace-pre-wrap font-mono">{{$feedback->text}}</pre>
                                                                 </div>
                                                             @endif    
-                                                            <div class="col-span-2 px-4 py-2 border-r">{{ \Carbon\Carbon::parse($feedback->date_logged)->format('Y-m-d')}}</div>
+                                                            <div class="col-span-2 px-4 py-2 border-r">
+                                                                {{ \Carbon\Carbon::parse($feedback->date_logged)->format('Y-m-d')}}
+                                                            </div>
                                                             @if($meetingMinuteState == 'started' or
                                                                 $meetingMinuteState == 'Active')
                                                                 <div class="col-span-2 px-4 py-2">

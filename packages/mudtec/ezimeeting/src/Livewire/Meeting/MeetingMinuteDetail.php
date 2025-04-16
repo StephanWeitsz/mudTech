@@ -131,6 +131,7 @@ class MeetingMinuteDetail extends Component
                 $this->meetingMinuteItems = $previouse_meetingMinute->meetingMinuteItems()
                     ->whereNull('date_closed')
                     ->get();
+
                 foreach ($this->meetingMinuteItems as $item) {
                     $itemData = [
                         'description' => $item->description,
@@ -153,12 +154,17 @@ class MeetingMinuteDetail extends Component
                         
                         //->whereNull('date_closed')
                         foreach($note->MeetingMinuteActions()->get() as $action) {
+                            $asId = $action->meeting_minute_action_status_id;
+                            $actionStatus = MeetingActionStatus::where('id', $asId)->first();
+                            if($actionStatus->description == "New")
+                                $newActionStatus = MeetingActionStatus::where('description', 'In Progress')->first();
+
                             $newAction = MeetingMinuteAction::create([
                                 'description' => $action->description,
                                 'text' => $action->text,
                                 'date_logged' => $action->date_logged,
                                 'meeting_minute_note_id' => $newNote->id,
-                                'meeting_minute_action_status_id' => $action->meeting_minute_action_status_id,
+                                'meeting_minute_action_status_id' => $newActionStatus->id,
                                 'date_due' => $action->date_due,
                             ]);
 
@@ -654,8 +660,6 @@ class MeetingMinuteDetail extends Component
             if ($this->meetingMinute) {
                 $this->meetingMinute->update($Data);
                 session()->flash('success', 'Meeting minute updated successfully.');
-
-
 
             } else {
                 session()->flash('error', 'Meeting minute not found.');
