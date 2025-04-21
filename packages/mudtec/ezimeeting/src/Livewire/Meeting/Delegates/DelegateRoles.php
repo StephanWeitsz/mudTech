@@ -1,6 +1,6 @@
 <?php
 
-namespace Mudtec\Ezimeeting\Livewire\Meeting;
+namespace Mudtec\Ezimeeting\Livewire\Meeting\Delegates;
 
 use Livewire\Component;
 
@@ -18,7 +18,7 @@ use Mudtec\Ezimeeting\Models\MeetingStatus;
 use Mudtec\Ezimeeting\Models\DelegateRole;
 use Mudtec\Ezimeeting\Models\MeetingDelegate;
 
-class MeetingDelegateRoles extends Component
+class DelegateRoles extends Component
 {
  
     public $assignedRoles = [];
@@ -73,7 +73,7 @@ class MeetingDelegateRoles extends Component
             ->orderBy('delegate_name')
             ->get();
 
-        return view('ezimeeting::livewire.meeting.meeting-delegate-roles');
+        return view('ezimeeting::livewire.meeting.delegates.delegate-roles');
     }
 
 }

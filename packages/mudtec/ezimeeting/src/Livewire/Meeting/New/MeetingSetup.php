@@ -1,6 +1,6 @@
 <?php
 
-namespace Mudtec\Ezimeeting\Livewire\Meeting;
+namespace Mudtec\Ezimeeting\Livewire\Meeting\New;
 
 use Livewire\Component;
 use Illuminate\Validation\Rule;
@@ -13,7 +13,7 @@ use Mudtec\Ezimeeting\Models\Meeting;
 use Mudtec\Ezimeeting\Models\MeetingLocation;
 use Mudtec\Ezimeeting\Models\MeetingInterval;
 
-class NewMeeting extends Component
+class MeetingSetup extends Component
 {
     public $departments;
     public $intervals;
@@ -90,15 +90,15 @@ class NewMeeting extends Component
             $meeting = Meeting::create($validatedData);
             $meetingNumber = $meeting->id;
             session()->flash('success', 'Meeting created successfully');
-            return redirect()->route('newMeetingDelegates', ['meetingId' => $meetingNumber, 'corpId'=>$this->corpId]);
+            return redirect()->route('meetingDelegates', ['meetingId' => $meetingNumber, 'corpId'=>$this->corpId]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            session()->flash('error', 'Error: Problem creating meeting');
+            session()->flash('error', 'Error: Problem creating meeting.' . $e->getMessage());
         }
     }
 
     public function render()
     {
-        return view('ezimeeting::livewire.meeting.new-meeting');
+        return view('ezimeeting::livewire.meeting.new.meeting-setup');
     }
 }

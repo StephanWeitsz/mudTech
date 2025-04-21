@@ -1,7 +1,7 @@
 <x-ezim::ezimeeting>
     @section('content')
         @if(isset($ownerId))  
-            @livewire('myMeetings')
+            @livewire('myMeetingList')
         @else
             @livewire('MeetingList')
         @endif    

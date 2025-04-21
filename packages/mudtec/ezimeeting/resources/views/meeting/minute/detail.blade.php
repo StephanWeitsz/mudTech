@@ -8,9 +8,9 @@
                 <div class="card-body">
                     <!-- Meeting Detail content goes here -->
                     @if($minutesId)
-                        @livewire('MeetingMinuteDetail', ['meetingId' => $meetingId, 'minutesId' => $minutesId])
+                        @livewire('MinuteDetail', ['meetingId' => $meetingId, 'minutesId' => $minutesId])
                     @else
-                        @livewire('MeetingMinuteDetail', ['meetingId' => $meetingId, 'minutesId' => 0])
+                        @livewire('MinuteDetail', ['meetingId' => $meetingId, 'minutesId' => 0])
                     @endif
                 </div>
             </div>
@@ -21,9 +21,9 @@
             <div class="p-5 bg-gray-400 border border-gray-800 h-full">
                 <div class="card-body">
                     @if($minutesId) 
-                        @livewire('MeetingMinuteAttendees', ['meetingId' => $meetingId, 'minutesId' => $minutesId])
+                        @livewire('Attendees', ['meetingId' => $meetingId, 'minutesId' => $minutesId])
                     @else
-                        @livewire('MeetingMinuteAttendees', ['meetingId' => $meetingId, 'minutesId' => 0])
+                        @livewire('Attendees', ['meetingId' => $meetingId, 'minutesId' => 0])
                     @endif
                 </div>
             </div>

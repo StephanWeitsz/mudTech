@@ -17,25 +17,12 @@ class MeetingMinuteNote extends Model
     protected $fillable = [
         'description',
         'text',
-        'date_logged',
-        'date_closed',
-        'meeting_minute_item_id',
     ];
 
-    // Define a belongsTo relationship with MeetingMinuteActionStatus model
-    
-
-    // Define a belongsTo relationship with MeetingMinuteItem model
-    public function meetingMinuteItem()
+    public function descriptors(): MorphMany
     {
-        return $this->belongsTo(MeetingMinuteItem::class);
+        return $this->morphMany(MeetingMinuteDescriptor::class, 'descriptor');
     }
-    // Define a belongsTo relationship with MeetingMinuteAction model
-    public function meetingMinuteActions()
-    {
-        return $this->hasMany(MeetingMinuteAction::class);
-    }
-
     
 
 }

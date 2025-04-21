@@ -1,5 +1,5 @@
 <x-ezim::ezimeeting>
     @section('content')
-        @livewire('MeetingMinutesList', ['meetingId' => $meetingId])   
+        @livewire('Calendar')   
     @endsection
 </x-ezim::ezimeeting>

@@ -1,6 +1,7 @@
 <?php
 
-namespace Mudtec\Ezimeeting\Livewire\Meeting;
+namespace Mudtec\Ezimeeting\Livewire\Meeting\Minutes
+;
 
 use Livewire\Component;
 use Illuminate\Validation\Rule;
@@ -20,7 +21,7 @@ use Mudtec\Ezimeeting\Models\MeetingDelegate;
 use Mudtec\Ezimeeting\Models\MeetingAttendeeStatus;
 use Mudtec\Ezimeeting\Models\MeetingAttendee;
 
-class MeetingMinuteAttendees extends Component
+class Attendees extends Component
 {
     public $search;
 
@@ -94,6 +95,6 @@ class MeetingMinuteAttendees extends Component
         ->orderBy('delegate_name')
         ->get();
         
-        return view('ezimeeting::livewire.meeting.meeting-minute-attendees');
+        return view('ezimeeting::livewire.meeting.minutes.attendees');
     }
 }

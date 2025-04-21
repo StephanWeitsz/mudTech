@@ -1,6 +1,6 @@
 <?php
 
-namespace Mudtec\Ezimeeting\Livewire\Meeting;
+namespace Mudtec\Ezimeeting\Livewire\Meeting\Minutes;
 
 use Livewire\Component;
 
@@ -14,7 +14,7 @@ use Mudtec\Ezimeeting\Models\MeetingStatus;
 use Mudtec\Ezimeeting\Models\MeetingLocation;
 use Mudtec\Ezimeeting\Models\MeetingMinute;
 
-class MeetingMinutesList extends Component
+class MinutesList extends Component
 {
     public $minutesId;
 
@@ -43,7 +43,7 @@ class MeetingMinutesList extends Component
 
     public function render()
     {
-        return view('ezimeeting::livewire.meeting.meeting-minutes-list', ['meetingId' => $this->meetingId]);
+        return view('ezimeeting::livewire.meeting.minutes.minutes-list', ['meetingId' => $this->meetingId]);
     }
 
 }

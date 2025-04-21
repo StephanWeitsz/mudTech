@@ -1,13 +1,13 @@
 <?php
 
-namespace Mudtec\Ezimeeting\Livewire\Meeting;
+namespace Mudtec\Ezimeeting\Livewire\Meeting\Calendar;
 
 use Livewire\Component;
 use Carbon\Carbon;
 
 use Mudtec\Ezimeeting\Models\Meeting;
 
-class CalendarMeetings extends Component
+class Calendar extends Component
 {
     public $currentMonth;
     public $currentYear;
@@ -53,7 +53,7 @@ class CalendarMeetings extends Component
 
         //dd($start,$end,$meetings);    
 
-        return view('ezimeeting::livewire.meeting.calendar-meetings', [
+        return view('ezimeeting::livewire.meeting.calendar.calender', [
             'meetings' => $meetings,
             'startOfMonth' => $start,
         ]);

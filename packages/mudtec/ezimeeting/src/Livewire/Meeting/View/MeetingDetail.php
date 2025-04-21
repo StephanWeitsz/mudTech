@@ -1,6 +1,6 @@
 <?php
 
-namespace Mudtec\Ezimeeting\Livewire\Meeting;
+namespace Mudtec\Ezimeeting\Livewire\Meeting\View;
 
 use Livewire\Component;
 
@@ -145,7 +145,7 @@ class MeetingDetail extends Component
 
     public function render()
     {
-        return view('ezimeeting::livewire.meeting.meeting-detail');
+        return view('ezimeeting::livewire.meeting.view.meeting-detail');
     }
 
 }

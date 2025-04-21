@@ -19,20 +19,25 @@ class MeetingMinute extends Model
      */
     protected $fillable = [
         'meeting_id',
-        'date',
-        'transcript',
-        'state',
+        'meeting_date',
+        'meeting_transcript',
+        'meeting_state',
     ];
   
     // Define a hasMany relationship with Meeting model
     public function meeting()
     {
-        return $this->hasMany(Meeting::class);
+        return $this->belongsTo(Meeting::class);
     }
 
-    // Define a belongsToMany relationship with MeetingMinuteItem model
-    public function meetingMinuteItems() {
-        return $this->belongsToMany(MeetingMinuteItem::class, 'meeting_minute_meeting_minute_item', 'meeting_minute_id', 'meeting_munute_item_id') ->withTimestamps();
+    public function items()
+    {
+        return $this->belongsToMany(MeetingMinuteItem::class, 'meeting_minute_meeting_minute_item', 'meeting_minute_id', 'meeting_minute_item_id');
+    }
+
+    public function descriptors()
+    {
+        return $this->hasMany(MeetingMinuteDescriptor::class);
     }
 
     // Define a belongsToMany relationship with MeetingDelegate model

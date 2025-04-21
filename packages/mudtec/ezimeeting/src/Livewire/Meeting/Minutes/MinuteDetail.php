@@ -1,11 +1,11 @@
 <?php
 
-namespace Mudtec\Ezimeeting\Livewire\Meeting;
+namespace Mudtec\Ezimeeting\Livewire\Meeting\Minutes;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\Rule;
 
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 
 use Mudtec\Ezimeeting\Models\MeetingInterval;
@@ -21,7 +21,7 @@ use Mudtec\Ezimeeting\Models\ActionResponsibilitie;
 use Mudtec\Ezimeeting\Models\MeetingStatus;
 use Mudtec\Ezimeeting\Models\Meeting;
 
-class MeetingMinuteDetail extends Component
+class MinuteDetail extends Component
 {
     use WithFileUploads;
 
@@ -32,9 +32,10 @@ class MeetingMinuteDetail extends Component
     public $minutesId;
 
     public $isEndMeetingOpen;
-    public $meetingMinuteDate;
-    public $meetingMinuteTranscript;
-    public $meetingMinuteState;
+    #[Rule('required', 'date')]
+    public $meetingDate;
+    public $meetingTranscript;
+    public $meetingState;
 
     public $meetingMinute;
     public $meetingMinuteItems = [];
@@ -85,37 +86,20 @@ class MeetingMinuteDetail extends Component
     {
         $this->meetingId = $meetingId;
         $this->minutesId = $minutesId;
-        //dd($this->meetingMinuteItems);
-        
     }
 
     public function createMeetingMinute()
     {
-        $validatedData = $this->validate([
-            'meetingMinuteDate' => ['required', 'date'],
-            'meetingMinuteTranscript' => ['nullable', 'file', 'mimes:txt,pdf,doc,docx', 'max:10240'], // max 10MB
-        ]);
+        $this->validate();
 
         $meetingStatusId = MeetingStatus::where('description','In-Progress')->first();
         Meeting::where('id', $this->meetingId)->update(['meeting_status_id' => $meetingStatusId->id]); 
-                 
-        $Data['date'] = $this->meetingMinuteDate;
+        
         $Data['meeting_id'] = $this->meetingId;
-        $Data['state'] = "started";
+        $Data['meeting_date'] = $this->meetingDate;
+        $Data['meeting_state'] = "Started";
         
         try {
-            // Handle transcript upload if provided
-            if ($this->meetingMinuteTranscript) {
-                $uploadPath = $this->meetingMinuteTranscript->store('transcripts');
-        
-                if ($uploadPath) {
-                    Log::info('Transcript uploaded to: ' . $uploadPath);
-                    $Data['transcript'] = $uploadPath;
-                } else {
-                    throw new \Exception('Failed to store transcript.');
-                }
-            }
-        
             // Retrieve the latest meeting minute based on the meeting_id
             $previouse_meetingMinute = MeetingMinute::where('meeting_id', $this->meetingId)->latest()->first();
             if ($previouse_meetingMinute) {
@@ -123,7 +107,7 @@ class MeetingMinuteDetail extends Component
                 // Create the new meeting minute record
                 $this->meetingMinute = MeetingMinute::create($Data);
                 session()->flash('success', 'Meeting minute created successfully');
-                $this->page_sub_heading = 'Meeting Minutes for ' . \Carbon\Carbon::parse($this->meetingMinuteDate)->format('Y-m-d');
+                $this->page_sub_heading = 'Meeting Minutes for ' . \Carbon\Carbon::parse($this->meetingDate)->format('Y-m-d');
                 $this->minutesId = $this->meetingMinute->id;
         
                 // Fetch meeting minute items that are not closed
@@ -191,7 +175,7 @@ class MeetingMinuteDetail extends Component
                 // Create the new meeting minute record
                 $this->meetingMinute = MeetingMinute::create($Data);
                 session()->flash('success', 'Meeting minute created successfully');
-                $this->page_sub_heading = 'Meeting Minutes for ' . \Carbon\Carbon::parse($this->meetingMinuteDate)->format('Y-m-d');
+                $this->page_sub_heading = 'Meeting Minutes for ' . \Carbon\Carbon::parse($this->meetingDate)->format('Y-m-d');
                 $this->minutesId = $this->meetingMinute->id; 
             }
         } catch (\Exception $e) {
@@ -594,15 +578,15 @@ class MeetingMinuteDetail extends Component
 
     public function showEndMeeting() {
         $this->isEndMeetingOpen = true;
-        $this->meetingMinuteDate = \Carbon\Carbon::parse($this->meetingMinuteDate)->format('Y-m-d');
+        $this->meetingDate = \Carbon\Carbon::parse($this->meetingDate)->format('Y-m-d');
     }
 
     public function signoffMeetingMinute() {
         $this->isEndMeetingOpen = false;
 
         $validatedData = $this->validate([
-            'meetingMinuteDate' => ['required', 'date'],
-            'meetingMinuteTranscript' => ['nullable', 'file', 'mimes:txt,pdf,doc,docx', 'max:10240'], // max 10MB
+            'meetingDate' => ['required', 'date'],
+            'meetingTranscript' => ['nullable', 'file', 'mimes:txt,pdf,doc,docx', 'max:10240'], // max 10MB
         ]);
 
         $meeting_interval_id = Meeting::where('id', $this->meetingId)->first()->meeting_interval_id;
@@ -613,7 +597,7 @@ class MeetingMinuteDetail extends Component
             $interval_value = (int) $matches[1];
             $interval_unit = $matches[2];
 
-            $new_scheduled_at = \Carbon\Carbon::parse($this->meetingMinuteDate);
+            $new_scheduled_at = \Carbon\Carbon::parse($this->meetingDate);
 
             switch ($interval_unit) {
                 case 'd':
@@ -629,7 +613,7 @@ class MeetingMinuteDetail extends Component
             $new_scheduled_at = $new_scheduled_at->format('Y-m-d');
         }
         else {
-            $new_scheduled_at = \Carbon\Carbon::parse($this->meetingMinuteDate)->format('Y-m-d');
+            $new_scheduled_at = \Carbon\Carbon::parse($this->meetingDate)->format('Y-m-d');
         }    
     
         $meetingStatusId = MeetingStatus::where('description','Active')->first();
@@ -638,7 +622,7 @@ class MeetingMinuteDetail extends Component
             'scheduled_at' => $new_scheduled_at,
         ]);
 
-        $Data['date'] = $this->meetingMinuteDate;
+        $Data['date'] = $this->meetingDate;
         $Data['meeting_id'] = $this->meetingId;
         $Data['state'] = "completed";
         
@@ -685,20 +669,36 @@ class MeetingMinuteDetail extends Component
         
         if (empty($this->minutesId)) {
             $this->meetingMinute = "";
-            $this->page_sub_heading = 'Capture mieetings minutes'; 
+            $this->page_sub_heading = 'Capture meetings minutes'; 
 
         } else {
             $this->meetingMinute = MeetingMinute::find($this->minutesId);
-            $this->meetingMinuteDate = $this->meetingMinute->date;
-            $this->meetingMinuteState = $this->meetingMinute->state; 
+            $this->meetingDate = $this->meetingMinute->meetingDate;
+            $this->meetingState = $this->meetingMinute->meetingState; 
             
-            $this->meetingMinuteItems = $this->meetingMinute->meetingMinuteItems()->get();
+/*
+            if ($this->meetingMinute->descriptors()->exists()) {
+                //dd($this->meetingMinute->descriptors);
+            }
+*/
 
-            $this->page_sub_heading = 'Meeting Minutes for ' . \Carbon\Carbon::parse($this->meetingMinuteDate)->format('Y-m-d');    
+/*
+            if ($this->meetingMinute->items->isNotEmpty()) {
+            if ($this->meetingMinute->items()->exists()) {    
+                
+                $this->meetingMinuteItems = $this->meetingMinute->Items()->get();
+                $meetings = MeetingMinute::with('items')->get();
+
+                MeetingMinuteDescriptor 
+
+            }
+  */
+
+            $this->page_sub_heading = 'Meeting Minutes for ' . \Carbon\Carbon::parse($this->meetingDate)->format('Y-m-d');
         } 
 
         Log::info("render new-meeting-minute");
-        return view('ezimeeting::livewire.meeting.new-meeting-minute', ['meetingId' => $this->meetingId]);
+        return view('ezimeeting::livewire.meeting.minutes.minute-detail', ['meetingId' => $this->meetingId]);
     }
 
 }

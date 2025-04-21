@@ -1,6 +1,6 @@
 <?php
 
-namespace Mudtec\Ezimeeting\Livewire\Meeting;
+namespace Mudtec\Ezimeeting\Livewire\Meeting\Minutes;
 
 use Livewire\Component;
 
@@ -14,7 +14,7 @@ use Mudtec\Ezimeeting\Models\MeetingStatus;
 use Mudtec\Ezimeeting\Models\MeetingLocation;
 use Mudtec\Ezimeeting\Models\MeetingMinute;
 
-class MeetingMinutesView extends Component
+class MinuteList extends Component
 {
     public $minutesId;
 
@@ -22,7 +22,7 @@ class MeetingMinutesView extends Component
     public $meetingStatus;
     public $meetingMinutes;
 
-    public $page_heading = 'Meeting List';
+    public $page_heading = 'Meeting List (Latest)';
 
     public function mount($meetingId, $minutesId) 
     {
@@ -53,23 +53,23 @@ class MeetingMinutesView extends Component
     }
 
     public function MeetingMinuteDetails($meetingId) {
-        return redirect()->route('MeetingMinuteDetails', ['meeting' => $meetingId]);
+        return redirect()->route('MinuteDetail', ['meetingId' => $meetingId, 'minuteId' => 0]);
     }
 
     public function viewMeetingMinutes($meetingId,$minutesId) {
-        return redirect()->route('viewMeetingMinutes', ['meeting' => $meetingId, 'minute' => $minutesId]);
+        return redirect()->route('viewMeetingMinutes', ['meetingId' => $meetingId, 'minuteId' => $minutesId]);
     }
 
     public function listMeetingMinutes($meetingId) {
 
         Log::info('list meeting minute');
         //dd('list meeting minute');
-        return redirect()->route('MeetingMinuteList', ['meetingId' => $meetingId]);
+        return redirect()->route('MinuteList', ['meetingId' => $meetingId]);
     }
 
     public function render()
     {
-        return view('ezimeeting::livewire.meeting.meeting-minutes-view', ['meetingId' => $this->meetingId]);
+        return view('ezimeeting::livewire.meeting.minutes.minute-list', ['meetingId' => $this->meetingId]);
     }
 
 }

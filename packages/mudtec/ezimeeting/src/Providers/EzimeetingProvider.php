@@ -163,19 +163,23 @@ class EzimeetingProvider extends ServiceProvider
         Livewire::component('meetingAttendeeStatusManager', \Mudtec\Ezimeeting\Livewire\Admin\Meeting\MeetingAttendeeStatusManager::class);
         Livewire::component('meetingMinuteActionStatusManager', \Mudtec\Ezimeeting\Livewire\Admin\Meeting\MeetingMinuteActionStatusManager::class);
 
-        Livewire::component('NewMeeting', \Mudtec\Ezimeeting\Livewire\Meeting\NewMeeting::class);
-        Livewire::component('NewMeetingDelegates', \Mudtec\Ezimeeting\Livewire\Meeting\NewMeetingDelegates::class);
-        Livewire::component('MeetingList', \Mudtec\Ezimeeting\Livewire\Meeting\MeetingList::class);
-        Livewire::component('MeetingDetail', \Mudtec\Ezimeeting\Livewire\Meeting\MeetingDetail::class);
-        Livewire::component('MeetingDelegates', \Mudtec\Ezimeeting\Livewire\Meeting\MeetingDelegates::class);
-        Livewire::component('MeetingDelegateRoles', \Mudtec\Ezimeeting\Livewire\Meeting\MeetingDelegateRoles::class);
-        Livewire::component('MeetingMinutesList', \Mudtec\Ezimeeting\Livewire\Meeting\MeetingMinutesList::class);
-        Livewire::component('MeetingMinutesView', \Mudtec\Ezimeeting\Livewire\Meeting\MeetingMinutesView::class);
-        Livewire::component('MeetingMinuteDetail', \Mudtec\Ezimeeting\Livewire\Meeting\MeetingMinuteDetail::class);
-        Livewire::component('MeetingMinuteAttendees', \Mudtec\Ezimeeting\Livewire\Meeting\MeetingMinuteAttendees::class);
+        Livewire::component('Calendar', \Mudtec\Ezimeeting\Livewire\Meeting\Calendar\Calendar::class);
 
-        Livewire::component('myMeetings', \Mudtec\Ezimeeting\Livewire\Meeting\myMeetings::class);
-        Livewire::component('CalendarMeetings', \Mudtec\Ezimeeting\Livewire\Meeting\CalendarMeetings::class);
+        Livewire::component('DelegateRoles', \Mudtec\Ezimeeting\Livewire\Meeting\Delegates\DelegateRoles::class);
+        Livewire::component('DelegateEdit', \Mudtec\Ezimeeting\Livewire\Meeting\Delegates\DelegateEdit::class);
+        Livewire::component('DelegateSetup', \Mudtec\Ezimeeting\Livewire\Meeting\Delegates\DelegateSetup::class);
+
+        Livewire::component('Attendees', \Mudtec\Ezimeeting\Livewire\Meeting\Minutes\Attendees::class);
+        Livewire::component('MinuteDetail', \Mudtec\Ezimeeting\Livewire\Meeting\Minutes\MinuteDetail::class);
+        Livewire::component('MinuteList', \Mudtec\Ezimeeting\Livewire\Meeting\Minutes\MinuteList::class);
+        Livewire::component('MinutesList', \Mudtec\Ezimeeting\Livewire\Meeting\Minutes\MinutesList::class);
+        
+        Livewire::component('MeetingSetup', \Mudtec\Ezimeeting\Livewire\Meeting\New\MeetingSetup::class);
+                
+        Livewire::component('MyMeetingList', \Mudtec\Ezimeeting\Livewire\Meeting\owner\MyMeetingList::class);
+
+        Livewire::component('MeetingDetail', \Mudtec\Ezimeeting\Livewire\Meeting\View\MeetingDetail::class);
+        Livewire::component('MeetingList', \Mudtec\Ezimeeting\Livewire\Meeting\View\MeetingList::class);
         
     }
 

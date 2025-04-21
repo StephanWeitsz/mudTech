@@ -1,6 +1,6 @@
 <?php
 
-namespace Mudtec\Ezimeeting\Livewire\Meeting;
+namespace Mudtec\Ezimeeting\Livewire\Meeting\Delegates;
 
 use Livewire\Component;
 use Illuminate\Validation\Rule;
@@ -18,7 +18,7 @@ use Mudtec\Ezimeeting\Models\MeetingInterval;
 use Mudtec\Ezimeeting\Models\MeetingDelegate;
 use Mudtec\Ezimeeting\Models\DelegateRole;
 
-class NewMeetingDelegates extends Component
+class DelegateSetup extends Component
 {
     public $meetingId;
     public $corpid;
@@ -288,6 +288,6 @@ class NewMeetingDelegates extends Component
     public function render()
     {
         //unset($this->removeUsers);
-        return view('ezimeeting::livewire.meeting.new-meeting-delegates');
+        return view('ezimeeting::livewire.meeting.delegates.delegate-setup');
     }
 }

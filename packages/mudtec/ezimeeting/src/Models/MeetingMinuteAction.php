@@ -17,25 +17,10 @@ class MeetingMinuteAction extends Model
     protected $fillable = [
         'description',
         'text',
-        'date_logged',
-        'date_due',
-        'date_due_revised',
-        'date_closed',
-        'meeting_minute_note_id',
         'meeting_minute_action_status_id',
     ];
 
-    public function meetingMinuteNote()
-    {
-        return $this->belongsTo(MeetingMinuteNote::class);
-    }
-
-    public function meetingMinuteActionFeedbacks()
-    {
-        return $this->hasMany(MeetingMinuteActionFeedback::class);
-    }
-
-    public function meetingMinuteActionStatus()
+    public function status()
     {
         return $this->belongsTo(MeetingMinuteActionStatus::class);
     }
@@ -45,4 +30,10 @@ class MeetingMinuteAction extends Model
         return $this->belongsToMany(MeetingDelegate::class, 'action_responsibilities')
             ->withTimestamps();
     }
+
+    public function descriptors()
+    {
+        return $this->morphMany(MeetingMinuteDescriptor::class, 'descriptor');
+    }
+
 }

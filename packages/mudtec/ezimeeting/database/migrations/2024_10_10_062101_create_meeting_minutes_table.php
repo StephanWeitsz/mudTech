@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('meeting_minutes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('meeting_id')->constrained('meetings')->onDelete('cascade');
-            $table->timestamp('date');
-            $table->string('transcript')->nullable();
-            $table->string('state')->nullable();
+            $table->timestamp('meeting_date');
+            $table->string('meeting_transcript')->nullable();
+            $table->string('meeting_state');
             $table->timestamps();
         });
     }

@@ -70,21 +70,23 @@ Route::middleware('web')->group(function () {
     Route::get('/eziMeeting/admin/role/create', [RoleController::class, 'create'])->name('roleCreate');
     Route::get('/eziMeeting/admin/role/{role}', [RoleController::class, 'role'])->name('roleUpdate');
 
+
+
     Route::get('/eziMeeting/meeting/owner/list', [MeetingController::class, 'ownerList'])->name('myMeetingList');
 
     Route::get('/eziMeeting/meeting/new', [MeetingController::class, 'new'])->name('newMeeting');
-    Route::get('/eziMeeting/meeting/new/delegates/{corpId}/{meetingId}', [MeetingController::class, 'delegates'])->name('newMeetingDelegates');
+    Route::get('/eziMeeting/meeting/{meetingId}/delegates/{corpId}', [MeetingController::class, 'delegates'])->name('meetingDelegates');
     Route::get('/eziMeeting/meeting/list', [MeetingController::class, 'list'])->name('meetingList');
 
-    Route::get('/eziMeeting/meeting/view/{meeting}', [MeetingController::class, 'view'])->name('meetingView');
-    Route::get('/eziMeeting/meeting/edit/{meeting}', [MeetingController::class, 'edit'])->name('meetingEdit');
+    Route::get('/eziMeeting/meeting/{meetingId}/view', [MeetingController::class, 'view'])->name('meetingView');
+    Route::get('/eziMeeting/meeting/{meetingId}/edit', [MeetingController::class, 'edit'])->name('meetingEdit');
 
-    Route::get('/eziMeeting/meeting/{meetingId}/minutes', [MeetingController::class, 'MinutesList'])->name('MeetingMinuteList');
+    Route::get('/eziMeeting/meeting/{meetingId}/minutes', [MeetingController::class, 'MinutesList'])->name('MinutesList');
+    Route::get('/eziMeeting/meeting/{meetingId}/minute', [MeetingController::class, 'MinuteList'])->name('MinuteList');
 
-    Route::get('/eziMeeting/meeting/{meeting}/minute', [MeetingController::class, 'MinutesDetail'])->name('MeetingMinuteDetails');
-    Route::get('/eziMeeting/meeting/{meeting}/minute/{minute}', [MeetingController::class, 'viewMinutes'])->name('viewMeetingMinutes');
+    Route::get('/eziMeeting/meeting/{meetingId}/minute/{minuteId}', [MeetingController::class, 'MinuteDetail'])->name('MinuteDetail');
 
-    Route::get('/eziMeeting/meeting/calander', [MeetingController::class, 'viewCalander'])->name('viewMeetingCalander');
+    Route::get('/eziMeeting/meeting/calendarr', [MeetingController::class, 'Calendar'])->name('MeetingCalendar');
 
     Route::get('/eziMeeting/about', [HomeController::class, 'about'])->name('about');
     Route::get('/eziMeeting/contact', [HomeController::class, 'contact'])->name('contact');

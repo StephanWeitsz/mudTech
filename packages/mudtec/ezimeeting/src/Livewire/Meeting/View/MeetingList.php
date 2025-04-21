@@ -1,6 +1,6 @@
 <?php
 
-namespace Mudtec\Ezimeeting\Livewire\Meeting;
+namespace Mudtec\Ezimeeting\Livewire\Meeting\View;
 
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -15,7 +15,7 @@ use Mudtec\Ezimeeting\Models\MeetingStatus;
 use Mudtec\Ezimeeting\Models\MeetingLocation;
 use Mudtec\Ezimeeting\Models\MeetingInterval;
 
-class myMeetings extends Component
+class MeetingList extends Component
 {
 
     use WithPagination;
@@ -34,25 +34,23 @@ class myMeetings extends Component
     public function render()
     {
         $meetings = Meeting::when($this->search, function ($query) {
-            $query->whereRaw('LOWER(description)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
+            $query->whereRaw('LOWER(description) LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
             $query->orWhereRaw('LOWER(text)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
             $query->orWhereRaw('LOWER(purpose)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
             $query->orWhereRaw('LOWER(scheduled_at)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
-        })
-        ->where('created_by_user_id', auth()->user()->id) 
-        ->paginate(10);
+        })->paginate(10);
 
-        return view('ezimeeting::livewire.meeting.meeting-list', ['meetings' => $meetings]);
+        return view('ezimeeting::livewire.meeting.view.meeting-list', ['meetings' => $meetings]);
     }
 
     public function view($id) 
     {
-        return redirect()->route('meetingView', ['meeting' => $id]);
+        return redirect()->route('meetingView', ['meetingId' => $id]);
     }
 
     public function edit($id) 
     {
-        return redirect()->route('meetingEdit', ['meeting' => $id]);
+        return redirect()->route('meetingEdit', ['meetingId' => $id]);
     }
 
     public function close($id) {

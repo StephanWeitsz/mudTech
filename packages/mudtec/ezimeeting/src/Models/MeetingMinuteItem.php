@@ -22,12 +22,14 @@ class MeetingMinuteItem extends Model
         'date_closed',
     ];
 
-    // Define a belongsToMany relationship with MeetingMinute model
-    public function meetingMinute() {
-        return $this->belongsToMany(MeetingMinute::class, 'meeting_minute_meeting_minute_item', 'meeting_minute_id', 'meeting_minute_item_id') ->withTimestamps();
+    public function meetingMinutes()
+    {
+        return $this->belongsToMany(MeetingMinute::class, 'meeting_minute_meeting_minute_item', 'meeting_minute_item_id', 'meeting_minute_id');
     }
 
-    public function meetingMinuteNotes() {
-        return $this->hasMany(MeetingMinuteNote::class, 'meeting_minute_item_id');
+    public function descriptors()
+    {
+        return $this->hasMany(MeetingMinuteDescriptor::class);
     }
+    
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mudtec\Ezimeeting\Livewire\Meeting;
+namespace Mudtec\Ezimeeting\Livewire\Meeting\Owner;
 
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -34,13 +34,15 @@ class MeetingList extends Component
     public function render()
     {
         $meetings = Meeting::when($this->search, function ($query) {
-            $query->whereRaw('LOWER(description) LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
+            $query->whereRaw('LOWER(description)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
             $query->orWhereRaw('LOWER(text)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
             $query->orWhereRaw('LOWER(purpose)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
             $query->orWhereRaw('LOWER(scheduled_at)', 'LIKE ?', ['%' . mb_strtolower($this->search) . '%']);
-        })->paginate(10);
+        })
+        ->where('created_by_user_id', auth()->user()->id) 
+        ->paginate(10);
 
-        return view('ezimeeting::livewire.meeting.meeting-list', ['meetings' => $meetings]);
+        return view('ezimeeting::livewire.meeting.view.meeting-list', ['meetings' => $meetings]);
     }
 
     public function view($id) 

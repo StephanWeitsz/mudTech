@@ -15,9 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('description');
             $table->string('text')->nullable();
-            $table->timestamp('date_logged');
-            $table->timestamp('date_closed')->nullable();
-            $table->foreignId('meeting_minute_item_id')->constrained('meeting_minute_items')->onDelete('cascade');
             $table->timestamps();
         });
     }

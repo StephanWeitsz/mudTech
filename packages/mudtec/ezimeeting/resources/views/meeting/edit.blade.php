@@ -17,7 +17,7 @@
             <div class="p-5 bg-gray-400 border border-gray-800 h-full">
                 <div class="card-body"> 
                     <!-- Delegates content goes here -->
-                    @livewire('MeetingDelegates', ['meetingId' => $meetingId, 'corpId' => $corpId])
+                    @livewire('DelegateEdit', ['meetingId' => $meetingId, 'corpId' => $corpId])
                 </div>
             </div>
         </div>

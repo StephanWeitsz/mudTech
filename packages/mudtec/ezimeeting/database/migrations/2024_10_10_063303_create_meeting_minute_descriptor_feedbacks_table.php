@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('meeting_minute_action_feedback', function (Blueprint $table) {
+        Schema::create('meeting_minute_descriptor_feedbacks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('meeting_minute_action_id')->constrained('meeting_minute_actions')->onDelete('cascade');
+            $table->foreignId('meeting_minute_descriptor_id')->constrained('meeting_minute_descriptors')->onDelete('cascade');
             $table->string('text');
             $table->timestamp('date_logged')->nullable();
             $table->timestamps();

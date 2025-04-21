@@ -15,7 +15,7 @@ class Menu extends Component
                 ['label' => 'Create Meeting', 'route' => 'newMeeting', 'auth' => 'SuperUser|Admin|Organizer'],
                 ['label' => 'My Meetings', 'route' => 'myMeetingList','auth' => 'SuperUser|Admin|Organizer'],
                 ['label' => 'All Meetings', 'route' => 'meetingList','auth' => 'SuperUser|Admin|CorpAdmin|Organizer|Attendee'],
-                ['label' => 'Meeting Calandar', 'route' => 'viewMeetingCalander','auth' => true],
+                ['label' => 'Meeting Calandar', 'route' => 'MeetingCalendar','auth' => true],
                 //['label' => 'Meeting Report', 'route' => 'underDevelopment','auth' => true],
             ],
         ],

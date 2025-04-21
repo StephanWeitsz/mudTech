@@ -36,7 +36,7 @@ class MeetingMinuteActionStatus extends Model
      * Get the meeting minute actions with this status.
      * This method defines a hasMany relationship with MeetingMinuteAction model.
      */
-    public function meetingMinuteActions()
+    public function actions()
     {
         return $this->hasMany(MeetingMinuteAction::class);
     }

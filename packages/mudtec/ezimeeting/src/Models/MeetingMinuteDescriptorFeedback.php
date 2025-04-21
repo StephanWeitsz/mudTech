@@ -5,7 +5,7 @@ namespace Mudtec\Ezimeeting\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MeetingMinuteActionFeedback extends Model
+class MeetingMinuteDescriptorFeedback extends Model
 {
     use HasFactory;
 
@@ -15,13 +15,13 @@ class MeetingMinuteActionFeedback extends Model
      * @var array
      */
     protected $fillable = [
+        'meeting_minute_descriptor_id',
         'text',
         'date_logged',
-        'meeting_minute_action_id',
     ];
    
-    public function meetingMinuteAction()
+    public function descriptor()
     {
-        return $this->belongsTo(MeetingMinuteAction::class);
+        return $this->belongsTo(MeetingMinuteDescriptor::class);
     }
 }

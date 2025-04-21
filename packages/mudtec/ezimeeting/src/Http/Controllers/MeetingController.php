@@ -19,10 +19,14 @@ class MeetingController extends Controller
 
     public function delegates($corpId, $meetingId) {
         if (is_null($meetingId) || is_null($corpId)) {
-            dd("Required session variables are missing.");
-            //return redirect()->route('errorPage')->with('error', 'Required session variables are missing.');
+            //dd("Required session variables are missing.");
+            return redirect()->route('errorPage')->with('error', 'Required session variables are missing.');
         }
-        return view('ezimeeting::meeting.delegates', compact('meetingId', 'corpId'));
+        return view('ezimeeting::meeting.delegates.view', compact('meetingId', 'corpId'));
+    }
+
+    public function list() {
+        return view('ezimeeting::meeting.list');
     }
 
     public function view($meetingId) {
@@ -44,22 +48,17 @@ class MeetingController extends Controller
         return view('ezimeeting::meeting.edit', compact('meetingId', 'corpId'));
     }
 
-    public function MinutesDetail($meetingId) {
-        $minutesId = "";
-        return view('ezimeeting::meeting.minutes', compact('meetingId', 'minutesId'));
-    }
-
     public function MinutesList($meetingId) {
-        return view('ezimeeting::meeting.minutes-list', compact('meetingId'));
+        return view('ezimeeting::meeting.minutes.list', compact('meetingId'));
     }
 
-    public function viewMinutes($meetingId, $minutesId) {
-        
-        return view('ezimeeting::meeting.minutes', compact('meetingId', 'minutesId'));
+    public function MinuteList($meetingId) {
+        $minutesId = "";
+        return view('ezimeeting::meeting.minute.list', compact('meetingId', 'minutesId'));
     }
 
-    public function list() {
-        return view('ezimeeting::meeting.list');
+    public function MinuteDetail($meetingId, $minutesId) {       
+        return view('ezimeeting::meeting.minute.detail', compact('meetingId', 'minutesId'));
     }
 
     public function ownerList() {
@@ -67,8 +66,7 @@ class MeetingController extends Controller
         return view('ezimeeting::meeting.list', compact('ownerId'));
     }
 
-
-    public function viewCalander() {
-        return view('ezimeeting::meeting.calander');
+    public function MeetingCalendar() {
+        return view('ezimeeting::meeting.calendar.view');
     }
 }

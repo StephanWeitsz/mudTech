@@ -12,20 +12,21 @@
                     <form wire:submit.prevent="createMeetingMinute">
                         <div class="flex flex-wrap -mx-3 mb-6">
                             <div class="w-full px-3 mb-6 md:mb-0">
-                                <label for="meetingMinuteDate"
+                                <label for="meetingDate"
                                        class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" 
                                 >
                                     Meeting Date
                                 </label>
-                                <input wire:model="meetingMinuteDate" 
+                                <input wire:model="meetingDate" 
                                        type="date" 
-                                       id="meetingMinuteDate"
-                                       name="meetingMinuteDate"
+                                       id="meetingDate"
+                                       name="meetingDate"
                                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                        required>
-                                @error('meetingMinuteDate') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+                                @error('meetingDate') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
                             </div>
                         </div>
+                        {{--
                         <div class="flex flex-wrap -mx-3 mb-6">
                             <div class="w-full px-3">
                                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="meetingMinuteTranscript">
@@ -40,6 +41,7 @@
                                 @error('meetingMinuteTranscript') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
                             </div>
                         </div>
+                        --}}
                         <div class="flex flex-wrap -mx-3 mb-6">
                             <div class="w-full px-3">
                                 <button type="submit"
@@ -62,11 +64,10 @@
                         </div>
                         --}}
 
-                        {{--@dump($meetingMinuteState)--}}
+                        @dump($meetingState)
 
                         <!-- Action Button -->
-                        @if($meetingMinuteState == 'started' or
-                            $meetingMinuteState == 'Active')
+                        @if($meetingState == 'Started')
                             <div class="flex justify-end p-4 bg-white">
                                 <button wire:click="showAddItem"
                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >
@@ -79,8 +80,7 @@
                         @if($meetingMinuteItems)
                             @foreach($meetingMinuteItems as $item)
                                 <div class="grid grid-cols-10 border-b border-gray-300">
-                                    @if($meetingMinuteState == 'started' or
-                                        $meetingMinuteState == 'Active')
+                                    @if($meetingState == 'Started')
                                         <div class="col-span-6 px-4 py-2 border-r">
                                             <h3>{{$item->description}}</h3><br>
                                             <pre class="whitespace-pre-wrap font-mono">{{$item->text}}</pre>
@@ -98,8 +98,7 @@
                                             {{ \Carbon\Carbon::parse($item->date_closed)->format('Y-m-d') }}
                                         @endif
                                     </div>
-                                    @if($meetingMinuteState == 'started' or
-                                        $meetingMinuteState == 'Active')
+                                    @if($meetingState == 'Started')
                                         <div class="col-span-2 px-4 py-2">
                                             <div class="flex flex-wrap">
                                                 <div class="w-1/2 px-2 mb-2">
@@ -108,7 +107,7 @@
                                                         <i class="fas fa-sticky-note" title="New Note {{$item->id}}"></i>
                                                     </button>
                                                 </div>
-                                                @if(strtotime($item->date_logged) == strtotime($meetingMinuteDate))
+                                                @if(strtotime($item->date_logged) == strtotime($meetingDate))
                                                     <div class="w-1/2 px-2 mb-2">
                                                         <button wire:click="editItem({{$item->id}})"
                                                                 class="bg-{{$itemButtonColor}}-500 hover:bg-{{$itemButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -116,7 +115,7 @@
                                                         </button>
                                                     </div>
                                                 @endif
-                                                @if(strtotime($item->date_logged) == strtotime($meetingMinuteDate))
+                                                @if(strtotime($item->date_logged) == strtotime($meetingDate))
                                                     <div class="w-1/2 px-2">
                                                         <button wire:click="removeItem({{$item->id}})"
                                                                 class="bg-{{$itemButtonColor}}-500 hover:bg-{{$itemButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -124,7 +123,7 @@
                                                         </button>
                                                     </div>
                                                 @endif
-                                                @if(strtotime($item->date_logged) != strtotime($meetingMinuteDate))
+                                                @if(strtotime($item->date_logged) != strtotime($meetingDate))
                                                     <div class="w-1/2 px-2">
                                                         <button wire:click="closeItem({{$item->id}})"
                                                                 class="bg-{{$itemButtonColor}}-500 hover:bg-{{$itemButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -141,8 +140,7 @@
                                     @foreach($item->meetingMinuteNotes as $note)
                                         <div class="grid grid-cols-10 border-b border-gray-300 bg-gray-50">
                                             <div class="col-span-1 px-4 py-2 border-r">*</div>
-                                            @if($meetingMinuteState == 'started' or
-                                                $meetingMinuteState == 'Active')
+                                            @if($meetingState == 'Started')
                                                 <div class="col-span-5 px-4 py-2 border-r">
                                                     <h3>{{$note->description}}</h3><br>
                                                     <pre class="whitespace-pre-wrap font-mono">{{$note->text}}</pre>
@@ -159,8 +157,7 @@
                                                     Clo: {{ \Carbon\Carbon::parse($note->date_closed)->format('Y-m-d')}}
                                                 @endif
                                             </div>
-                                            @if($meetingMinuteState == 'started' or
-                                                $meetingMinuteState == 'Active')
+                                            @if($meetingState == 'started')
                                                 <div class="col-span-2 px-4 py-2">
                                                     <div class="flex flex-wrap">
                                                         <div class="w-1/2 px-2 mb-2">
@@ -169,7 +166,7 @@
                                                                 <i class="fas fa-sticky-note" title="New Note"></i>
                                                             </button>
                                                         </div>
-                                                        @if(strtotime($note->date_logged) == strtotime($meetingMinuteDate))
+                                                        @if(strtotime($note->date_logged) == strtotime($meetingDate))
                                                             <div class="w-1/2 px-2 mb-2">
                                                                 <button wire:click="editNote({{$note->id}})"
                                                                         class="bg-{{$noteButtonColor}}-500 hover:bg-{{$noteButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -177,7 +174,7 @@
                                                                 </button>
                                                             </div>
                                                         @endif
-                                                        @if(strtotime($note->date_logged) == strtotime($meetingMinuteDate))
+                                                        @if(strtotime($note->date_logged) == strtotime($meetingDate))
                                                             <div class="w-1/2 px-2">
                                                                 <button wire:click="removeNote({{$note->id}})"
                                                                         class="bg-{{$noteButtonColor}}-500 hover:bg-{{$noteButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -185,7 +182,7 @@
                                                                 </button>
                                                             </div>
                                                         @endif
-                                                        @if(strtotime($note->date_logged) != strtotime($meetingMinuteDate))
+                                                        @if(strtotime($note->date_logged) != strtotime($meetingDate))
                                                             <div class="w-1/2 px-2">
                                                                 <button wire:click="closeNote({{$note->id}})"
                                                                         class="bg-{{$noteButtonColor}}-500 hover:bg-{{$noteButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -208,8 +205,7 @@
                                                         {{$action->meetingMinuteActionStatus->description}}
                                                     </div>
                                                   
-                                                    @if($meetingMinuteState == 'started' or
-                                                        $meetingMinuteState == 'Active')
+                                                    @if($meetingState == 'started')
                                                         <div class="col-span-5 px-4 py-3 border-r">
                                                             <h3>{{$action->description}}</h3>
                                                             <br>
@@ -252,8 +248,7 @@
                                                             Clo: {{ \Carbon\Carbon::parse($action->date_closed)->format('Y-m-d')}}
                                                         @endif
                                                     </div>
-                                                    @if($meetingMinuteState == 'started' or
-                                                        $meetingMinuteState == 'Active')
+                                                    @if($meetingState == 'Started')
                                                         <div class="col-span-2 px-4 py-2">
                                                             <div class="flex flex-wrap">
                                                                 <div class="w-1/2 px-2 mb-2">
@@ -262,7 +257,7 @@
                                                                         <i class="fas fa-sticky-note" title="New Feedback"></i>
                                                                     </button>
                                                                 </div>
-                                                                @if(strtotime($action->date_logged) == strtotime($meetingMinuteDate))
+                                                                @if(strtotime($action->date_logged) == strtotime($meetingDate))
                                                                     <div class="w-1/2 px-2 mb-2">
                                                                         <button wire:click="editAction({{$action->id}})"
                                                                                 class="bg-{{$actionButtonColor}}-500 hover:bg-{{$actionButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -270,7 +265,7 @@
                                                                         </button>
                                                                     </div>
                                                                 @endif
-                                                                @if(strtotime($action->date_logged) == strtotime($meetingMinuteDate))    
+                                                                @if(strtotime($action->date_logged) == strtotime($meetingDate))    
                                                                     <div class="w-1/2 px-2">
                                                                         <button wire:click="removeAction({{$action->id}})"
                                                                                 class="bg-{{$actionButtonColor}}-500 hover:bg-{{$actionButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -278,7 +273,7 @@
                                                                         </button>
                                                                     </div>
                                                                 @endif
-                                                                @if(strtotime($action->date_logged) == strtotime($meetingMinuteDate))    
+                                                                @if(strtotime($action->date_logged) == strtotime($meetingDate))    
                                                                     <div class="w-1/2 px-2">
                                                                         <button wire:click="rescheduleAction({{$action->id}})"
                                                                                 class="bg-{{$actionButtonColor}}-500 hover:bg-{{$actionButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -286,7 +281,7 @@
                                                                         </button>
                                                                     </div>
                                                                 @endif
-                                                                @if(strtotime($action->date_logged) != strtotime($meetingMinuteDate))
+                                                                @if(strtotime($action->date_logged) != strtotime($meetingDate))
                                                                     <div class="w-1/2 px-2">
                                                                         <button wire:click="closeAction({{$action->id}})"
                                                                                 class="bg-{{$actionButtonColor}}-500 hover:bg-{{$actionButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -303,8 +298,7 @@
                                                     @foreach($action->meetingMinuteActionFeedbacks as $feedback)
                                                         <div class="grid grid-cols-10 border-b bg-blue-100 border-gray-300 bg-gray-50">
                                                             <div class="col-span-1 px-4 py-2 border-r"></div>
-                                                            @if($meetingMinuteState == 'started' or
-                                                                $meetingMinuteState == 'Active')
+                                                            @if($meetingState == 'Started')
                                                                 <div class="col-span-5 px-4 py-2 border-r">
                                                                     <pre class="whitespace-pre-wrap font-mono">{{$feedback->text}}</pre>
                                                                 </div>
@@ -316,11 +310,10 @@
                                                             <div class="col-span-2 px-4 py-2 border-r">
                                                                 {{ \Carbon\Carbon::parse($feedback->date_logged)->format('Y-m-d')}}
                                                             </div>
-                                                            @if($meetingMinuteState == 'started' or
-                                                                $meetingMinuteState == 'Active')
+                                                            @if($meetingtate == 'Started')
                                                                 <div class="col-span-2 px-4 py-2">
                                                                     <div class="flex flex-wrap">
-                                                                        @if(strtotime($feedback->date_logged) == strtotime($meetingMinuteDate))
+                                                                        @if(strtotime($feedback->date_logged) == strtotime($meetingDate))
                                                                             <div class="w-1/2 px-2 mb-2">
                                                                                 <button wire:click="editFeedback({{$feedback->id}})"
                                                                                         class="bg-{{$feedbackButtonColor}}-500 hover:bg-{{$feedbackButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -328,7 +321,7 @@
                                                                                 </button>
                                                                             </div>
                                                                         @endif    
-                                                                        @if(strtotime($feedback->date_logged) == strtotime($meetingMinuteDate))
+                                                                        @if(strtotime($feedback->date_logged) == strtotime($meetingDate))
                                                                             <div class="w-1/2 px-2">
                                                                                 <button wire:click="removeFeedback({{$feedback->id}})"
                                                                                         class="bg-{{$feedbackButtonColor}}-500 hover:bg-{{$feedbackButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -337,7 +330,7 @@
                                                                             </div>
                                                                         @endif
                                                                         {{--
-                                                                        @if(strtotime($feedback->date_logged) != strtotime($meetingMinuteDate))
+                                                                        @if(strtotime($feedback->date_logged) != strtotime($meetingDate))
                                                                             <div class="w-1/3 px-2">
                                                                                 <button wire:click="closeFeedback({{$feedback->id}})"
                                                                                         class="bg-{{$feedbackButtonColor}}-500 hover:bg-{{$feedbackButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
@@ -594,7 +587,7 @@
                                                         @error('actionDue') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                                                     </div>
 
-                                                    @if($actionDue and strtotime($actionLogged) != strtotime($meetingMinuteDate))
+                                                    @if($actionDue and strtotime($actionLogged) != strtotime($meetingDate))
                                                         <div class="mb-4">
                                                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mt-4" for="actionRevised">
                                                                 New Due Date
@@ -718,8 +711,7 @@
                                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >
                                 ← back
                             </button>
-                            @if($meetingMinuteState == "started" or
-                                $meetingMinuteState == 'Active')
+                            @if($meetingState == "Started")
                                 <button wire:click="showEndMeeting"
                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >
                                     End Meeting
@@ -738,16 +730,16 @@
                                                 <form wire:submit.prevent="signoffMeetingMinute">
                                                     <div class="flex flex-wrap -mx-3 mb-6">
                                                         <div class="w-full px-3 mb-6 md:mb-0">
-                                                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="meetingMinuteDate">
+                                                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="meetingDate">
                                                                 Meeting Date
                                                             </label>
-                                                            <input wire:model="meetingMinuteDate" 
+                                                            <input wire:model="meetingDate" 
                                                                 type="date" 
-                                                                id="meetingMinuteDate"
-                                                                name="meetingMinuteDate"
+                                                                id="meetingDate"
+                                                                name="meetingDate"
                                                                 class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                                                 display>
-                                                            @error('meetingMinuteDate') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+                                                            @error('meetingDate') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
                                                         </div>
                                                     </div>
                                                     <div class="flex flex-wrap -mx-3 mb-6">

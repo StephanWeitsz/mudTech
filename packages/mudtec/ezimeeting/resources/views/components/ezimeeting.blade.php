@@ -23,15 +23,15 @@
         <!-- Custom styles -->
         <!--<link rel="stylesheet" href="{{asset('css/app.css')}}"> -->
 
-        <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
-        <!-- @livewireStyles -->
+        {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+        {{-- @livewireStyles --}}
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
         <x-menu.load></x-menu.load>
         @yield('content')
         <x-footer.load></x-footer.load>
 
-        <!-- stack('modals') -->
-        <!-- @livewireScripts -->
+        {{-- stack('modals') --}}
+        {{-- @livewireScripts --}}
     </body>
 </html>

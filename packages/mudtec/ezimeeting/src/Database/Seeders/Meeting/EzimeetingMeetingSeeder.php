@@ -19,6 +19,7 @@ use Mudtec\Ezimeeting\Models\MeetingMinuteNote;
 use Mudtec\Ezimeeting\Models\MeetingMinuteAction;
 use Mudtec\Ezimeeting\Models\MeetingMinuteActionStatus;
 use Mudtec\Ezimeeting\Models\MeetingMinuteActionFeedback;
+use Mudtec\Ezimeeting\Models\MeetingMinuteDescriptor;
 
 class EzimeetingMeetingSeeder extends Seeder
 {
@@ -40,7 +41,7 @@ class EzimeetingMeetingSeeder extends Seeder
         
 
         $userList = ['1'=>"A",'2'=>"A",'3'=>"A",'4'=>"A"];
-        $meetingDate = "2025-04-10";
+        $meetingDate = "2025-04-01";
         //Create a Meeting
         $meeting_main = Meeting::create([
             'description' => "Project Developmnent Catchup and Testing",
@@ -57,6 +58,7 @@ class EzimeetingMeetingSeeder extends Seeder
         ]);
         $this->setupMeetingMinutes($meeting_main, $userList, $meetingDate);
         
+        /*
         for($i = 0; $i < 10; $i++) {
             $meetingDate = Carbon::now()->subDays(rand(1, 365))->format('Y-m-d');
             $meeting = Meeting::create([
@@ -74,10 +76,11 @@ class EzimeetingMeetingSeeder extends Seeder
             ]);
             $this->setupMeetingMinutes($meeting, $userList, $meetingDate);
         }
+        */    
     }
 
     public function setupMeetingMinutes(Meeting $meeting, $userList, $meetingDate) {
-        $states = ["New", "Active", "In-Progress", "Onhold", "Canceled", "Closed"];
+        $states = ["Started", "Active", "In-Progress", "Completed", "Canceled"];
 
         $randomKey = array_rand($userList);
         $userList[$randomKey] = "S";
@@ -97,46 +100,84 @@ class EzimeetingMeetingSeeder extends Seeder
             ]);
         } 
        
-        //Create first meeting minutes
-        $Data['meeting_id'] = $meeting->id;
-        $Data['date'] = $meetingDate;
-        $Data['state'] = $states[rand(0, count($states) - 1)];
-        $meetingMinute = MeetingMinute::create($Data);
-
-        //Add Item 1 to meeting minutes
-        $itemData = [
-            'description' => fake()->text(50),
-            'text' => fake()->text(200),
-            'date_logged' => $meetingDate,
+        // 1. Create Meeting Minute
+        $Data = [
+            'meeting_id' => $meeting->id,
+            'meeting_date' => $meetingDate,
+            'meeting_state' => "Started",
         ];
-        $newItem = MeetingMinuteItem::create($itemData);
-        $meetingMinute->meetingMinuteItems()->attach($newItem->id);
-            
-        //create a note on meeting item
-        $newNote = MeetingMinuteNote::create([
-            'description' => fake()->text(60),
+        $meetingMinute = MeetingMinute::create($Data);
+        
+        // 2. Add Item to Meeting Minute
+        $item = MeetingMinuteItem::create([
+            'description' => "Discussion Point 1",
+            'text' => "Test Item for meeting",
+            'date_logged' => $meetingDate,
+        ]);
+        $meetingMinute->items()->attach($item->id);
+        
+        // 3. Create First Note
+        $note1 = MeetingMinuteNote::create([
+            'description' => "Initial Note",
             'text' => fake()->text(200),
-            'date_logged' => $meetingDate,
-            'meeting_minute_item_id' => $newItem->id,
         ]);
-         
-        $initStatus = MeetingMinuteActionStatus::where('description','New')->first();
-        $owner = MeetingDelegate::findorfail(rand(1, 4));
-
-        $newAction = MeetingMinuteAction::create([
-            'description' => fake()->text(100),
-            'text' => fake()->text(150),
+        
+        $descriptor1 = new MeetingMinuteDescriptor([
+            'meeting_minute_id' => $meetingMinute->id,
+            'meeting_minute_item_id' => $item->id,
             'date_logged' => $meetingDate,
-            'meeting_minute_note_id' => $newNote->id,
+        ]);
+        $note1->descriptors()->save($descriptor1);
+        
+        // 4. Create Action
+        $initStatus = MeetingMinuteActionStatus::where('description', 'New')->first();
+        //$owner = MeetingDelegate::findorfail(rand(1, 4));
+        
+        $action = MeetingMinuteAction::create([
+            'description' => "Initial Action for Item 1",
+            'text' => fake()->text(100),
             'meeting_minute_action_status_id' => $initStatus->id,
-            'date_due' => date("Y-m-t", strtotime($meetingDate)),
         ]);
-        $newAction->delegates()->attach($owner);
-                
+        
+        $descriptor2 = new MeetingMinuteDescriptor([
+            'meeting_minute_id' => $meetingMinute->id,
+            'meeting_minute_item_id' => $item->id,
+            'date_logged' => now(),
+        ]);
+        $action->descriptors()->save($descriptor2);
+        
+        // 5. Create Second Note
+        $note2 = MeetingMinuteNote::create([
+            'description' => "Second Note on Item 1",
+            'text' => fake()->text(200),
+        ]);
+        
+        $descriptor3 = new MeetingMinuteDescriptor([
+            'meeting_minute_id' => $meetingMinute->id,
+            'meeting_minute_item_id' => $item->id,
+            'date_logged' => $meetingDate,
+        ]);
+        $note2->descriptors()->save($descriptor3);
+        
+        // 6. Create Action Linked to Second Note (nested)
+        $subAction = MeetingMinuteAction::create([
+            'description' => "Follow-up Action for 2nd Note",
+            'text' => fake()->text(100),
+            'meeting_minute_action_status_id' => $initStatus->id,
+        ]);
+        
+        $descriptor4 = new MeetingMinuteDescriptor([
+            'meeting_minute_id' => $meetingMinute->id,
+            'meeting_minute_item_id' => $item->id,
+            'date_logged' => now(),
+            'parent_descriptor_id' => $descriptor3->id, // Links this action to the second note
+        ]);
+        $subAction->descriptors()->save($descriptor4);
+
         $newFeedback = MeetingMinuteActionFeedback::create([
             'text' => fake()->text(80),
             'date_logged' => $meetingDate,
-            'meeting_minute_action_id' => $newAction->id,
-        ]);
+            'meeting_minute_action_id' => $subAction->id,
+        ]);        
     }
 }
