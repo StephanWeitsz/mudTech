@@ -10,6 +10,13 @@ class MeetingMinuteDescriptorFeedback extends Model
     use HasFactory;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'meeting_minute_descriptor_feedbacks';
+    
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

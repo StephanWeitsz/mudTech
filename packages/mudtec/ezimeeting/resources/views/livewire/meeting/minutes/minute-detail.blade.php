@@ -8,7 +8,7 @@
         <div class="container mx-auto py-3">
             <div class="flex flex-wrap justify-between">
 
-                @if(empty($minutesId))
+                @if(empty($minuteId))
                     <form wire:submit.prevent="createMeetingMinute">
                         <div class="flex flex-wrap -mx-3 mb-6">
                             <div class="w-full px-3 mb-6 md:mb-0">
@@ -65,6 +65,7 @@
                         --}}
 
                         @dump($meetingState)
+
 
                         <!-- Action Button -->
                         @if($meetingState == 'Started')
@@ -136,35 +137,65 @@
                                     @endif    
                                 </div>
 
-                                @if($item->meetingMinuteNotes) 
-                                    @foreach($item->meetingMinuteNotes as $note)
+
+                                @dump($item->descriptors)
+
+                                
+                                    @foreach($item->descriptors as $descriptor)
+                                        @dump($descriptor)
+
                                         <div class="grid grid-cols-10 border-b border-gray-300 bg-gray-50">
-                                            <div class="col-span-1 px-4 py-2 border-r">*</div>
+                                            @if($descriptor->descriptorable_type === 'App\Models\MeetingMinuteNote')
+                                                <div class="col-span-1 px-4 py-2 border-r">*</div>
+                                            @elseif($descriptor->descriptorable_type === 'App\Models\MeetingMinuteAction')
+                                                <span class="inline-block w-10 h-10 rounded-full" 
+                                                style="background-color: {{ $descriptor->descriptorable->meeting_minute_action_status->color ?? 'blue' }};">
+                                                </span>
+                                                {{ $descriptor->descriptorable->meeting_minute_action_status->description }}
+                                            @endif
+                                            
                                             @if($meetingState == 'Started')
                                                 <div class="col-span-5 px-4 py-2 border-r">
-                                                    <h3>{{$note->description}}</h3><br>
-                                                    <pre class="whitespace-pre-wrap font-mono">{{$note->text}}</pre>
+                                                    <h3>{{$descriptor->descriptorable->description}}</h3><br>
+                                                    <pre class="whitespace-pre-wrap font-mono">{{$descriptor->descriptorable->text}}</pre>
                                                 </div>
                                             @else
                                                 <div class="col-span-7 px-4 py-2 border-r">
-                                                    <h3>{{$note->description}}</h3><br>
-                                                    <pre class="whitespace-pre-wrap font-mono">{{$note->text}}</pre>
+                                                    <h3>{{$descriptor->descriptorable->description}}</h3><br>
+                                                    <pre class="whitespace-pre-wrap font-mono">{{$descriptor->descriptorable->text}}</pre>
                                                 </div>
                                             @endif
+
                                             <div class="col-span-2 px-4 py-2 border-r">
-                                                log: {{ \Carbon\Carbon::parse($note->date_logged)->format('Y-m-d')}}
-                                                @if($note->date_closed)
-                                                    Clo: {{ \Carbon\Carbon::parse($note->date_closed)->format('Y-m-d')}}
+                                                log: {{ \Carbon\Carbon::parse($descriptor->descriptorable->date_logged)->format('Y-m-d')}}
+                                                @if($descriptor->descriptorable->date_logged)
+                                                    Log: {{ \Carbon\Carbon::parse($descriptor->descriptorable->date_logged)->format('Y-m-d')}}
+                                                @endif
+                                                @if($descriptor->descriptorable_type === 'App\Models\MeetingMinuteAction')
+                                                    @if($descriptor->descriptorable->date_due)
+                                                        
+                                                        @if($descriptor->descriptorable->date_due_revised)
+                                                            Due: <del>{{ \Carbon\Carbon::parse($descriptor->descriptorable->date_due)->format('Y-m-d')}}</del>
+                                                            <br> {{ \Carbon\Carbon::parse($descriptor->descriptorable->date_due_revised)->format('Y-m-d')}}
+                                                        @else
+                                                            <br> {{ \Carbon\Carbon::parse($descriptor->descriptorable->date_due)->format('Y-m-d')}}
+                                                        @endif
+                                                    @endif
+                                                @endif
+                                                @if($descriptor->descriptorable->date_closed)
+                                                    Clo: {{ \Carbon\Carbon::parse($descriptor->descriptorable->date_closed)->format('Y-m-d')}}
                                                 @endif
                                             </div>
                                             @if($meetingState == 'started')
                                                 <div class="col-span-2 px-4 py-2">
                                                     <div class="flex flex-wrap">
                                                         <div class="w-1/2 px-2 mb-2">
-                                                            <button wire:click="showAddAction({{$note->id}})"
-                                                                    class="bg-{{$noteButtonColor}}-500 hover:bg-{{$noteButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
-                                                                <i class="fas fa-sticky-note" title="New Note"></i>
-                                                            </button>
+                                                            @if($descriptor->descriptorable_type === 'App\Models\MeetingMinuteNote')
+                                                                <button wire:click="showAddAction({{$note->id}})"
+                                                                        class="bg-{{$noteButtonColor}}-500 hover:bg-{{$noteButtonColor}}-700 text-white font-bold py-2 px-4 rounded w-full">
+                                                                    <i class="fas fa-sticky-note" title="New Note"></i>
+                                                                </button>
+                                                            @endif    
                                                         </div>
                                                         @if(strtotime($note->date_logged) == strtotime($meetingDate))
                                                             <div class="w-1/2 px-2 mb-2">
@@ -348,7 +379,7 @@
                                             @endforeach
                                         @endif
                                     @endforeach  
-                                @endif
+                                
                             @endforeach    
                         @endif
 

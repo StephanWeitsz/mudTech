@@ -26,7 +26,7 @@ class Attendees extends Component
     public $search;
 
     public $meetingId;
-    public $minutesId;
+    public $minuteId;
     public $delegates;
     public $attendeeStatuses;
     public $assignedAttendeeStatus;
@@ -34,13 +34,13 @@ class Attendees extends Component
     public $page_heading = 'Meeting Attendees';
     public $page_sub_heading = 'Set attendee Status';
 
-    public function mount($meetingId, $minutesId) 
+    public function mount($meetingId, $minuteId) 
     {
 
         $this->meetingId = $meetingId;
-        $this->minutesId = $minutesId;
+        $this->minuteId = $minuteId;
 
-        if(empty($minutesId))
+        if(empty($minuteId))
             $this->page_sub_heading = 'Capture meeting munites first';
         else {
             $this->attendeeStatuses = MeetingAttendeeStatus::all();
@@ -56,7 +56,7 @@ class Attendees extends Component
         ->get();
 
         foreach ($this->delegates as $attendee) {
-            $attendeeStatus = MeetingAttendee::where('minute_id', $this->minutesId)
+            $attendeeStatus = MeetingAttendee::where('minute_id', $this->minuteId)
                 ->where('meeting_delegate_id', $attendee->id)
                 ->value('meeting_attendee_status_id');
 
@@ -70,7 +70,7 @@ class Attendees extends Component
         if ($delegate) {
             MeetingAttendee::updateOrCreate(
                 [
-                    'minute_id' => $this->minutesId,
+                    'minute_id' => $this->minuteId,
                     'meeting_delegate_id' => $delegateId,
                 ],
                 [

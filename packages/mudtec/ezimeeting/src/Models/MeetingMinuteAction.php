@@ -36,4 +36,8 @@ class MeetingMinuteAction extends Model
         return $this->morphMany(MeetingMinuteDescriptor::class, 'descriptor');
     }
 
+    public function responsibilities()
+    {
+        return $this->hasMany(ActionResponsibility::class, 'meeting_minute_action_id');
+    }
 }

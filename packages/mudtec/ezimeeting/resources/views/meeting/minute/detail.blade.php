@@ -7,10 +7,10 @@
             <div class="p-5 bg-gray-400 border border-gray-800 h-full">
                 <div class="card-body">
                     <!-- Meeting Detail content goes here -->
-                    @if($minutesId)
-                        @livewire('MinuteDetail', ['meetingId' => $meetingId, 'minutesId' => $minutesId])
+                    @if($minuteId)
+                        @livewire('MinuteDetail', ['meetingId' => $meetingId, 'minuteId' => $minuteId])
                     @else
-                        @livewire('MinuteDetail', ['meetingId' => $meetingId, 'minutesId' => 0])
+                        @livewire('MinuteDetail', ['meetingId' => $meetingId, 'minuteId' => 0])
                     @endif
                 </div>
             </div>
@@ -20,10 +20,10 @@
         <div class="flex-1 w-full sm:w-2/5">
             <div class="p-5 bg-gray-400 border border-gray-800 h-full">
                 <div class="card-body">
-                    @if($minutesId) 
-                        @livewire('Attendees', ['meetingId' => $meetingId, 'minutesId' => $minutesId])
+                    @if($minuteId) 
+                        @livewire('Attendees', ['meetingId' => $meetingId, 'minuteId' => $minuteId])
                     @else
-                        @livewire('Attendees', ['meetingId' => $meetingId, 'minutesId' => 0])
+                        @livewire('Attendees', ['meetingId' => $meetingId, 'minuteId' => 0])
                     @endif
                 </div>
             </div>

@@ -30,13 +30,13 @@ class MeetingController extends Controller
     }
 
     public function view($meetingId) {
-        $minutesId = "";
+        $minuteId = "";
         $meeting = Meeting::find($meetingId);
         $dep_id = $meeting->department_id;
         $corpId = Department::whereHas('corporation', function ($query) use ($dep_id) {
             $query->where('id', $dep_id);
         })->pluck('corporation_id')->first();
-        return view('ezimeeting::meeting.view', compact('meetingId', 'minutesId', 'corpId'));
+        return view('ezimeeting::meeting.view', compact('meetingId', 'minuteId', 'corpId'));
     }
 
     public function edit($meetingId) {
@@ -53,12 +53,12 @@ class MeetingController extends Controller
     }
 
     public function MinuteList($meetingId) {
-        $minutesId = "";
-        return view('ezimeeting::meeting.minute.list', compact('meetingId', 'minutesId'));
+        $minuteId = "";
+        return view('ezimeeting::meeting.minute.list', compact('meetingId', 'minuteId'));
     }
 
-    public function MinuteDetail($meetingId, $minutesId) {       
-        return view('ezimeeting::meeting.minute.detail', compact('meetingId', 'minutesId'));
+    public function MinuteDetail($meetingId, $minuteId) {    
+       return view('ezimeeting::meeting.minute.detail', compact('meetingId', 'minuteId'));
     }
 
     public function ownerList() {

@@ -16,7 +16,7 @@ use Mudtec\Ezimeeting\Models\MeetingMinute;
 
 class MinuteList extends Component
 {
-    public $minutesId;
+    public $minuteId;
 
     public $meetingId;
     public $meetingStatus;
@@ -24,17 +24,17 @@ class MinuteList extends Component
 
     public $page_heading = 'Meeting List (Latest)';
 
-    public function mount($meetingId, $minutesId) 
+    public function mount($meetingId, $minuteId) 
     {
         $status = MeetingStatus::findOrFail(Meeting::findOrFail($meetingId)->meeting_status_id);
         $this->meetingStatus = $status->description;
         
         Log::info('mount meeting minute');
-        if(isset($minutesId) and !empty($minutesId)) {
-            $this->minutesId = $minutesId;
+        if(isset($minuteId) and !empty($minuteId)) {
+            $this->minuteId = $minuteId;
 
             $this->meetingMinutes = MeetingMinute::where('meeting_id', $meetingId)
-                                                    ->where('id', '=', $minutesId)
+                                                    ->where('id', '=', $minuteId)
                                                     ->orderBy('created_at', 'desc')
                                                     ->get();
         }
@@ -52,12 +52,14 @@ class MinuteList extends Component
         }
     }
 
-    public function MeetingMinuteDetails($meetingId) {
+    //MeetingMinuteCreate
+    public function MeetingMinuteCreate($meetingId) {
         return redirect()->route('MinuteDetail', ['meetingId' => $meetingId, 'minuteId' => 0]);
     }
 
-    public function viewMeetingMinutes($meetingId,$minutesId) {
-        return redirect()->route('viewMeetingMinutes', ['meetingId' => $meetingId, 'minuteId' => $minutesId]);
+    //MeetingMinuteDetail
+    public function MeetingMinuteDetail($meetingId,$minuteId) {
+        return redirect()->route('MinuteDetail', ['meetingId' => $meetingId, 'minuteId' => $minuteId]);
     }
 
     public function listMeetingMinutes($meetingId) {

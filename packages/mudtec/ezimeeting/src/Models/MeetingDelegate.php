@@ -59,6 +59,11 @@ class MeetingDelegate extends Model
         return $this->hasMany(Meeting::class);
     }
 
+    public function responsibilities()
+    {
+        return $this->hasMany(ActionResponsibility::class, 'meeting_delegate_id');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);

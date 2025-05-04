@@ -9,17 +9,20 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 use Mudtec\Ezimeeting\Models\Corporation;
-use Mudtec\Ezimeeting\Models\Meeting;
 use Mudtec\Ezimeeting\Models\User;
 use Mudtec\Ezimeeting\Models\DelegateRole;
+
+use Mudtec\Ezimeeting\Models\Meeting;
+
 use Mudtec\Ezimeeting\Models\MeetingDelegate;
 use Mudtec\Ezimeeting\Models\MeetingMinute;
 use Mudtec\Ezimeeting\Models\MeetingMinuteItem;
 use Mudtec\Ezimeeting\Models\MeetingMinuteNote;
 use Mudtec\Ezimeeting\Models\MeetingMinuteAction;
 use Mudtec\Ezimeeting\Models\MeetingMinuteActionStatus;
-use Mudtec\Ezimeeting\Models\MeetingMinuteActionFeedback;
 use Mudtec\Ezimeeting\Models\MeetingMinuteDescriptor;
+use Mudtec\Ezimeeting\Models\MeetingMinuteDescriptorFeedback;
+use Mudtec\Ezimeeting\Models\ActionResponsibility;
 
 class EzimeetingMeetingSeeder extends Seeder
 {
@@ -42,6 +45,7 @@ class EzimeetingMeetingSeeder extends Seeder
 
         $userList = ['1'=>"A",'2'=>"A",'3'=>"A",'4'=>"A"];
         $meetingDate = "2025-04-01";
+        
         //Create a Meeting
         $meeting_main = Meeting::create([
             'description' => "Project Developmnent Catchup and Testing",
@@ -80,7 +84,7 @@ class EzimeetingMeetingSeeder extends Seeder
     }
 
     public function setupMeetingMinutes(Meeting $meeting, $userList, $meetingDate) {
-        $states = ["Started", "Active", "In-Progress", "Completed", "Canceled"];
+        $states = ["Started", "Completed", "Canceled"];
 
         $randomKey = array_rand($userList);
         $userList[$randomKey] = "S";
@@ -117,21 +121,20 @@ class EzimeetingMeetingSeeder extends Seeder
         $meetingMinute->items()->attach($item->id);
         
         // 3. Create First Note
-        $note1 = MeetingMinuteNote::create([
+        $note = MeetingMinuteNote::create([
             'description' => "Initial Note",
             'text' => fake()->text(200),
         ]);
         
-        $descriptor1 = new MeetingMinuteDescriptor([
+        $note_descriptor = $note->descriptors()->create([
             'meeting_minute_id' => $meetingMinute->id,
             'meeting_minute_item_id' => $item->id,
             'date_logged' => $meetingDate,
         ]);
-        $note1->descriptors()->save($descriptor1);
         
         // 4. Create Action
         $initStatus = MeetingMinuteActionStatus::where('description', 'New')->first();
-        //$owner = MeetingDelegate::findorfail(rand(1, 4));
+        $owner = MeetingDelegate::findorfail(rand(1, 4));
         
         $action = MeetingMinuteAction::create([
             'description' => "Initial Action for Item 1",
@@ -139,12 +142,22 @@ class EzimeetingMeetingSeeder extends Seeder
             'meeting_minute_action_status_id' => $initStatus->id,
         ]);
         
-        $descriptor2 = new MeetingMinuteDescriptor([
+        $action_descriptor = $action->descriptors()->create([
             'meeting_minute_id' => $meetingMinute->id,
             'meeting_minute_item_id' => $item->id,
             'date_logged' => now(),
         ]);
-        $action->descriptors()->save($descriptor2);
+
+        ActionResponsibility::create([
+            'meeting_minute_action_id' => $action->id,
+            'meeting_delegate_id' => $owner->id,
+        ]);
+
+        $feedback = MeetingMinuteDescriptorFeedback::create([
+            'text' => fake()->text(80),
+            'date_logged' => $meetingDate,
+            'meeting_minute_descriptor_id' => $action_descriptor->id,
+        ]);
         
         // 5. Create Second Note
         $note2 = MeetingMinuteNote::create([
@@ -152,32 +165,37 @@ class EzimeetingMeetingSeeder extends Seeder
             'text' => fake()->text(200),
         ]);
         
-        $descriptor3 = new MeetingMinuteDescriptor([
+        $note_descriptor = $note2->descriptors()->create([
             'meeting_minute_id' => $meetingMinute->id,
             'meeting_minute_item_id' => $item->id,
             'date_logged' => $meetingDate,
         ]);
-        $note2->descriptors()->save($descriptor3);
         
         // 6. Create Action Linked to Second Note (nested)
-        $subAction = MeetingMinuteAction::create([
+        $action = MeetingMinuteAction::create([
             'description' => "Follow-up Action for 2nd Note",
             'text' => fake()->text(100),
             'meeting_minute_action_status_id' => $initStatus->id,
         ]);
         
-        $descriptor4 = new MeetingMinuteDescriptor([
+        $action_descriptor = $action->descriptors()->create([
             'meeting_minute_id' => $meetingMinute->id,
             'meeting_minute_item_id' => $item->id,
             'date_logged' => now(),
-            'parent_descriptor_id' => $descriptor3->id, // Links this action to the second note
+            'parent_descriptor_id' => $note_descriptor->id,
         ]);
-        $subAction->descriptors()->save($descriptor4);
 
-        $newFeedback = MeetingMinuteActionFeedback::create([
+        $owner = MeetingDelegate::findorfail(rand(1, 4));
+        ActionResponsibility::create([
+            'meeting_minute_action_id' => $action->id,
+            'meeting_delegate_id' => $owner->id,
+        ]);
+
+        $feedback = MeetingMinuteDescriptorFeedback::create([
             'text' => fake()->text(80),
             'date_logged' => $meetingDate,
-            'meeting_minute_action_id' => $subAction->id,
-        ]);        
+            'meeting_minute_descriptor_id' => $action_descriptor->id,
+        ]);
+         
     }
 }

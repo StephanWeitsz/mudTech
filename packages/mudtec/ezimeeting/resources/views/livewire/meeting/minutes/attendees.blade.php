@@ -1,5 +1,5 @@
 <div>
-    @if($minutesId)
+    @if($minuteId)
         <div class="container mx-auto bg-white shadow-md rounded-lg p-6 w-6/7">
             <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-12 space-y-4">

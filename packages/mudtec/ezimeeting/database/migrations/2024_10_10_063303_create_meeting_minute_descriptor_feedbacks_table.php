@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('meeting_minute_action_feedback');
+        Schema::dropIfExists('meeting_minute_descriptor_feedbacks');
     }
 };

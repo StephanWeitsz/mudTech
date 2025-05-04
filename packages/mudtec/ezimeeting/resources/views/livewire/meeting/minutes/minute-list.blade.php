@@ -4,13 +4,13 @@
         <div class="container mx-auto py-3">
             <div class="flex flex-wrap justify-between">
                 @if( $meetingStatus == "New" || $meetingStatus == "In-Progress" || $meetingStatus == "Active") 
-                    <button wire:click='MeetingMinuteDetails({{ $meetingId }})' class="bg-blue-500 text-white py-5 px-10 rounded mb-2">New</button>
+                    <button wire:click='MeetingMinuteCreate({{ $meetingId }})' class="bg-blue-500 text-white py-5 px-10 rounded mb-2">New</button>
                 @endif
                 @foreach ($meetingMinutes as $mm)
                     @php
                         $date = \Carbon\Carbon::parse($mm->date)->format('Y-m-d');
                     @endphp
-                    <button wire:click='viewMeetingMinutes({{$meetingId}} ,{{ $mm->id }})' 
+                    <button wire:click='MeetingMinuteDetail({{$meetingId}} ,{{ $mm->id }})' 
                             class="bg-gray-500 text-white py-5 px-6 rounded mb-2">
                         {{ $date }} <br> {{ strtoupper($mm->state) }}
                     </button>

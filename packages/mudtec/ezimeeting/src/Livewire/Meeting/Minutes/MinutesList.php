@@ -16,7 +16,7 @@ use Mudtec\Ezimeeting\Models\MeetingMinute;
 
 class MinutesList extends Component
 {
-    public $minutesId;
+    public $minuteId;
 
     public $meetingId;
     public $meetingStatus;
@@ -32,9 +32,9 @@ class MinutesList extends Component
         ->get();
     }
 
-    public function edit($meetingId, $minutesId)
+    public function edit($meetingId, $minuteId)
     {
-        return redirect()->route('viewMeetingMinutes', ['meeting' => $meetingId, 'minute' => $minutesId]);
+        return redirect()->route('viewMeetingMinutes', ['meeting' => $meetingId, 'minute' => $minuteId]);
     }
 
     public function back() {

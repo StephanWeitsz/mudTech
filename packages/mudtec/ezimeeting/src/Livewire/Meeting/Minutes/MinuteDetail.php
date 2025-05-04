@@ -8,18 +8,19 @@ use Livewire\Attributes\Rule;
 
 use Illuminate\Support\Facades\Log;
 
+use Mudtec\Ezimeeting\Models\Meeting;
+use Mudtec\Ezimeeting\Models\MeetingStatus;
 use Mudtec\Ezimeeting\Models\MeetingInterval;
-use Mudtec\Ezimeeting\Models\MeetingMinute;
+
 use Mudtec\Ezimeeting\Models\MeetingDelegate;
+use Mudtec\Ezimeeting\Models\MeetingMinute;
 use Mudtec\Ezimeeting\Models\MeetingMinuteItem;
 use Mudtec\Ezimeeting\Models\MeetingMinuteNote;
 use Mudtec\Ezimeeting\Models\MeetingMinuteAction;
 use Mudtec\Ezimeeting\Models\MeetingMinuteActionStatus;
-use Mudtec\Ezimeeting\Models\MeetingMinuteActionFeedback;
-
-use Mudtec\Ezimeeting\Models\ActionResponsibilitie;
-use Mudtec\Ezimeeting\Models\MeetingStatus;
-use Mudtec\Ezimeeting\Models\Meeting;
+use Mudtec\Ezimeeting\Models\MeetingMinuteDescriptor;
+use Mudtec\Ezimeeting\Models\MeetingMinuteDescriptorFeedback;
+use Mudtec\Ezimeeting\Models\ActionResponsibility;
 
 class MinuteDetail extends Component
 {
@@ -29,11 +30,12 @@ class MinuteDetail extends Component
     public $selectedDelegate = "";
 
     public $meetingId;
-    public $minutesId;
+    public $minuteId;
 
     public $isEndMeetingOpen;
     #[Rule('required', 'date')]
     public $meetingDate;
+    #[Rule('nullable', 'file', 'mimes:txt,pdf,doc,docx', 'max:10240')] // max 10MB
     public $meetingTranscript;
     public $meetingState;
 
@@ -41,57 +43,62 @@ class MinuteDetail extends Component
     public $meetingMinuteItems = [];
     public $meetingMinuteNotes = [];
     public $meetingMinuteActions = [];
-    public $meetingMinuteActionFeedbacks = [];
+    public $meetingMinuteFeedbacks = [];
 
     public $NewButtonColor = 'blue';
+    public $itemButtonColor = 'green';
+    public $noteButtonColor = 'yellow';
+    public $actionButtonColor = 'purple';
+    public $feedbackButtonColor = 'blue';
 
+    #[Rule('required', 'max:255')]
     public $itemDescription;
+    #[Rule('required', 'max:255')]
     public $itemText;
+    #[Rule('required', 'date')]
     public $itemLogged;
+    #[Rule('nullable', 'date')]
     public $itemClosed;
     public $selectedItemId;
     public $editingItemId;
     public $isItemOpen = false;
-    public $itemButtonColor = 'green';
-
+    
+    #[Rule('required', 'min:2', 'max:255')]
     public $noteDescription;
+    #[Rule('required', 'min:10', 'max:255')]
     public $noteText;
-    public $noteClosed;
     public $selectedNoteId;
     public $editingNoteId;
     public $isNoteOpen;
-    public $noteButtonColor = 'yellow';
-
+    
+    #[Rule('required', 'min:2', 'max:255')]
     public $actionDescription;
+    #[Rule('required', 'min:10', 'max:255')]
     public $actionText;
-    public $actionLogged;
-    public $actionDue;
-    public $actionRevised;
-    public $actionClosed;
     public $selectedActionId; 
     public $editingActionId;
     public $isActionOpen;
-    public $actionButtonColor = 'purple';
     
+    #[Rule('required', 'min:2', 'max:255')]
     public $feedbackText;
     public $editingFeedbackId;
+    public $selectedDescriptorId;
     public $isFeedbackOpen;
-    public $feedbackButtonColor = 'blue';
-
+    
     public $page_heading = 'Meeting Minutes';
     public $page_sub_heading = ''; 
 
-
-    public function mount($meetingId, $minutesId) 
+    public function mount($meetingId, $minuteId) 
     {
         $this->meetingId = $meetingId;
-        $this->minutesId = $minutesId;
+        $this->minuteId = $minuteId;
     }
 
     public function createMeetingMinute()
     {
         $this->validate();
 
+        //Set meeting Status to in-Progress
         $meetingStatusId = MeetingStatus::where('description','In-Progress')->first();
         Meeting::where('id', $this->meetingId)->update(['meeting_status_id' => $meetingStatusId->id]); 
         
@@ -108,7 +115,7 @@ class MinuteDetail extends Component
                 $this->meetingMinute = MeetingMinute::create($Data);
                 session()->flash('success', 'Meeting minute created successfully');
                 $this->page_sub_heading = 'Meeting Minutes for ' . \Carbon\Carbon::parse($this->meetingDate)->format('Y-m-d');
-                $this->minutesId = $this->meetingMinute->id;
+                $this->minuteId = $this->meetingMinute->id;
         
                 // Fetch meeting minute items that are not closed
                 // Loop through each meeting minute item and create a new item
@@ -176,13 +183,14 @@ class MinuteDetail extends Component
                 $this->meetingMinute = MeetingMinute::create($Data);
                 session()->flash('success', 'Meeting minute created successfully');
                 $this->page_sub_heading = 'Meeting Minutes for ' . \Carbon\Carbon::parse($this->meetingDate)->format('Y-m-d');
-                $this->minutesId = $this->meetingMinute->id; 
+                $this->minuteId = $this->meetingMinute->id; 
             }
-        } catch (\Exception $e) {
+        } //try 
+        catch (\Exception $e) {
             Log::error('Error creating meeting minute: ' . $e->getMessage());
             session()->flash('error', 'Error: creating meeting minute : ' . $e->getMessage()); 
         } //catch (\Exception $e) {
-    } 
+    } //public function createMeetingMinute() 
 
     ////////////////////////////////////////////////////
     //Items
@@ -193,30 +201,32 @@ class MinuteDetail extends Component
         $this->itemDescription = '';
         $this->itemText = '';
         $this->isItemOpen = true;
-    }
+    } //public function showAddItem()
     
     public function hideAddItem()
     {
         $this->isItemOpen = false;
-    }
+    } //public function hideAddItem()
 
     public function submitNewItem() 
     {
         $this->isItemOpen = false;
-        $validatedData = $this->validate([
-            'itemDescription' => ['required'],
-            'itemText' => ['required','max:255'],
-        ]);
-
-        $Data['description'] = $this->itemDescription;
-        $Data['text'] = $this->itemText;
-        $Data['date_logged'] = date("Y-m-d");
-        //$Data['date_closed'] = null;
-      
-        $newItem = MeetingMinuteItem::create($Data);
-        $this->meetingMinute->meetingMinuteItems()->attach($newItem->id);
-        session()->flash('success', 'Meeting minute item created successfully');
-    }
+        $this->validate();
+        
+        try {
+            $item = MeetingMinuteItem::create([
+                'description' => $this->itemDescription,
+                'text' => $this->itemText,
+                'date_logged' => date("Y-m-d"),
+            ]);
+            $meetingMinute->items()->attach($item->id);
+            session()->flash('success', 'Meeting minute item created successfully');
+        } //try {}
+        catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error: creating meeting minute item.');      
+        } //catch (\Exception $e) {
+    } //public function submitNewItem() 
 
     public function removeItem($itemId)
     {
@@ -225,10 +235,12 @@ class MinuteDetail extends Component
             $this->meetingMinute->meetingMinuteItems()->detach($itemId);
             $item->delete();
             session()->flash('success', 'Meeting minute item removed successfully');
-        } catch (\Exception $e) {
-            session()->flash('error', 'Error: removing meeting minute item. ' . $e->getMessage());
-        }
-    }
+        } //try {
+        catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error: removing meeting minute item. ');
+        } //catch (\Exception $e) {
+    } //public function removeItem($itemId)
 
     public function editItem($itemId)
     {
@@ -239,39 +251,52 @@ class MinuteDetail extends Component
         $this->itemClosed = \Carbon\Carbon::parse($item->closed)->format('Y-m-d');
         $this->isItemOpen = true;
         $this->editingItemId = $itemId;
-    }
+    } //public function editItem($itemId)
 
     public function saveItem()
     {
-        $validatedData = $this->validate([
-            'itemDescription' => ['required'],
-            'itemText' => ['required', 'max:255'],
-            'itemLogged' => ['required', 'date'],
-        ]);
+        $this->validate();
 
-        $item = MeetingMinuteItem::findOrFail($this->editingItemId);
-        $item->description = $this->itemDescription;
-        $item->text = $this->itemText;
-        $item->date_logged = $this->itemLogged;
-        $item->save();
+        try {
+            $item = MeetingMinuteItem::findOrFail($this->editingItemId);
+            $item->description = $this->itemDescription;
+            $item->text = $this->itemText;
+            $item->date_logged = $this->itemLogged;
+            $item->save();
 
-        $this->isItemOpen = false;
-        $this->editingItemId = null;
-        session()->flash('success', 'Meeting minute item updated successfully');
-    }
+            $this->isItemOpen = false;
+            $this->editingItemId = null;
+            session()->flash('success', 'Meeting minute item updated successfully');
+        } //try {} 
+        catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error: updating meeting minute item. ' . $e->getMessage());
+        } //} catch (\Exception $e) {
+    } //public function saveItem()
 
     public function closeItem($itemId) {
-        $item = MeetingMinuteItem::findOrFail($itemId);
-        $itemNote = $item->meetingMinuteNotes()->whereNull('date_closed')->count();
-        if(empty($itemNote)) {
+        try {
+            $item = MeetingMinuteItem::findOrFail($itemId);
+    
+            $openDescriptors = MeetingMinuteDescriptor::where('meeting_minute_item_id', $itemId)
+                ->whereNull('date_closed')
+                ->exists();
+    
+            if ($openDescriptors) {
+                session()->flash('error', 'This item cannot be closed because there are still active notes or actions.');
+                return;
+            } //if ($openDescriptors) {
+    
             $item->date_closed = date("Y-m-d");
             $item->save();
-            session()->flash('success', 'Meeting minute item closed successfully');
-        } //if(empty($noteAction)) {
-        else {
-            session()->flash('error', 'Error: Cannot close item with open notes. Please close all notes first.');
-        } //else
-    }
+    
+            session()->flash('success', 'Meeting minute item closed successfully.');
+        } //try`{ 
+        catch (\Exception $e) {
+            Log::error('Error closing item: ' . $e->getMessage());
+            session()->flash('error', 'Error: Unable to close the item.');
+        } //catch (\Exception $e) {
+    } //public function closeItem($itemId) {
 
     /////////////////////////////////////////////////////
     //Notes
@@ -283,51 +308,56 @@ class MinuteDetail extends Component
         $this->noteDescription = "";
         $this->noteText = "";
         $this->isNoteOpen = true;
-    }
+    } //public function showAddNote($itemId) 
 
     public function hideAddNote()
     {
         Log::info("clicked hideAddNote");
         $this->isNoteOpen = false;
-    }
+    } //public function hideAddNote()
 
     public function submitNewNote() 
     {
         Log::debug("clicked submitNewNote");
-        $validatedData = $this->validate([
-            'noteDescription' => ['required'],
-            'noteText' => ['required','max:255'],
-        ]);
-        Log::debug("validated Data : $this->selectedItemId");
-
-        $Data['meeting_minute_item_id'] = $this->selectedItemId;
-        $Data['description'] = $this->noteDescription;
-        $Data['text'] = $this->noteText;
-        $Data['date_logged'] = date("Y-m-d");
-
+        $this->validate();
+        
         try {
-            Log::debug("try create");
-            MeetingMinuteNote::create($Data);
+            $note = MeetingMinuteNote::create([
+                'description' => $this->noteDescription,
+                'text' => $this->noteText,
+            ]);
+
+            $note_descriptor = $note->descriptors()->create([
+                'meeting_minute_id' => $this->minuteId,
+                'meeting_minute_item_id' => $this->selectedItemId,
+                'date_logged' => date("Y-m-d"),
+            ]);
             session()->flash('success', 'Meeting minute Note created successfully');
-        }
+        } //try {
         catch (\Exception $e) {
             Log::error($e->getMessage());
-            session()->flash('error', 'Error: creating meeting minute note.' . $e->getMessage());      
-        }
-        Log::info("close popup");
+            session()->flash('error', 'Error: creating meeting minute note.');
+        } //catch (\Exception $e) {
         $this->isNoteOpen = false;   
-    }
+    } //public function submitNewNote() 
 
     public function removeNote($noteId)
     {
         try {
             $note = MeetingMinuteNote::findOrFail($noteId);
-            $this->meetingMinuteItem->meetingMinuteItems()->meetingMinuteNotes()->detach($noteId);
+            $descriptor = MeetingMinuteDescriptor::where('meeting_minute_note_id', $noteId)->first();
+
+            if ($descriptor) {
+                $descriptor->delete();
+            } //if ($descriptor) {
+
             $note->delete();
             session()->flash('success', 'Meeting minute Note removed successfully');
-        } catch (\Exception $e) {
-            session()->flash('error', 'Error: removing meeting minute note. ' . $e->getMessage());
-        }
+        } //try { 
+        catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error: removing meeting minute note. ');
+        } //catch (\Exception $e) {
     }
 
     public function editNote($noteId)
@@ -337,14 +367,11 @@ class MinuteDetail extends Component
         $this->noteText = $note->text;
         $this->isNoteOpen = true;
         $this->editingNoteId = $noteId;
-    }
+    } //public function editNote($noteId)
 
     public function saveNote()
     {
-        $validatedData = $this->validate([
-            'noteDescription' => ['required'],
-            'noteText' => ['required', 'max:255'],
-        ]);
+        $validatedData = $this->validate();
 
         $note = MeetingMinuteNote::findOrFail($this->editingNoteId);
         $note->description = $this->noteDescription;
@@ -353,20 +380,48 @@ class MinuteDetail extends Component
 
         $this->isNoteOpen = false;
         session()->flash('success', 'Meeting minute note updated successfully');
-    }
+    } //public function saveNote()
 
     public function closeNote($noteId) {
-        $note = MeetingMinuteNote::findOrFail($noteId);
-        $noteAction = $note->meetingMinuteActions()->whereNull('date_closed')->count();
-        if(empty($noteAction)) {
-            $note->date_closed = date("Y-m-d");
-            $note->save();
-            session()->flash('success', 'Meeting minute note closed successfully');
-        } //if(empty($noteAction)) {
-        else {
-            session()->flash('error', 'Error: Cannot close note with open actions. Please close all actions first.');
-        } //else
-    }
+        try {
+            $openDescriptors = MeetingMinuteDescriptor::where('meeting_minute_item_id', $itemId)
+                ->where('parent_descriptor_id', $noteId) 
+                ->whereNull('date_closed')
+                ->exists();
+
+            if ($openDescriptors) {
+                session()->flash('error', 'This item cannot be closed because there are still active notes or actions.');
+                return;
+            } //if ($openDescriptors) {
+
+            $noteDescriptors = MeetingMinuteDescriptor::where('meeting_minute_item_id', $itemId)
+                ->where('descriptor_id', $noteId)
+                ->whereNull('date_closed')
+                ->get();
+
+            $note_cnt = 0;
+            foreach ($noteDescriptors as $descriptor) {
+                if (strpos($descriptor->type, 'note')) {
+                    $note_cnt++;
+                    $descriptor->date_closed = date("Y-m-d");
+                    $descriptor->save();
+                } //if (strpos($descriptor->type, 'note')) {
+            } //foreach ($noteDescriptors as $descriptor) {
+
+            if($note_cnt > 0) {
+                session()->flash('success', 'Meeting minute note closed $note_cnt successfully.');
+            } //if($note_cnt > 0) {
+            else {
+                session()->flash('error', 'Error: No Notes found to be closed.');
+            } //else
+        } //try {
+        catch (\Exception $e) {
+            Log::error('Error closing note: ' . $e->getMessage());
+            session()->flash('error', 'Error: Unable to close the note.');
+        } //catch (\Exception $e) {
+
+        $this->isNoteOpen = false;
+    } //public function closeNote($noteId) {
 
     /////////////////////////////////////////////////////
     //Actions
@@ -379,46 +434,61 @@ class MinuteDetail extends Component
         $this->selectedNoteId = $noteId;
         $this->actionDescription = "";
         $this->actionText = "";
-        $this->actionLogged = "";
-        $this->actionDue = "";
-        $this->actionRevised = "";
-
         $this->isActionOpen = true;
-    }
+    } //public function showAddAction($noteId) 
 
     public function hideAddAction()
     {
         $this->isActionOpen = false;
-    }
+    } //public function hideAddAction()
 
     public function submitNewAction() 
     {
         $this->isActionOpen = false;
-        $validatedData = $this->validate([
-            'actionDescription' => ['required'],
-            'actionText' => ['required','max:255'],
-        ]);
+        $validatedData = $this->validate();
 
-        $initStatus = MeetingMinuteActionStatus::where('description','New')->first();
+        try {
+            $initStatus = MeetingMinuteActionStatus::where('description','New')->first();
+        
+            $action = MeetingMinuteAction::create([
+                'description' => $this->actionDescription,
+                'text' => $this->actionText,
+                'meeting_minute_action_status_id' => $initStatus->id,
+            ]);
 
-        $Data['meeting_minute_note_id'] = $this->selectedNoteId;
-        $Data['description'] = $this->actionDescription;
-        $Data['text'] = $this->actionText;
-        $Data['meeting_minute_action_status_id'] = $initStatus->id;
-        $Data['date_logged'] = date("Y-m-d");
-        $Data['date_due'] = $this->actionDue;
+            if($this->selectedNoteId) {
+                $action_descriptor = $action->descriptors()->create([
+                    'meeting_minute_id' => $meetingId,
+                    'meeting_minute_item_id' => $this->selectedItemId,
+                    'date_logged' => now(),
+                    'parent_descriptor_id' => $this->selectedNoteId,
+                ]);
+            } //if($this->selectedNoteId) {
+            else {
+                $action_descriptor = $action->descriptors()->create([
+                    'meeting_minute_id' => $this->minuteId,
+                    'meeting_minute_item_id' => $this->selectedItemId,
+                    'date_logged' => now(),
+                ]);
+            } //else
 
-        $newAction = MeetingMinuteAction::create($Data);
+            $action = MeetingMinuteAction::create($Data);
        
-        if ($this->selectedDelegate and $this->selectedDelegate != "ALL") {
-            $newAction->delegates()->attach($this->selectedDelegate);
-        }
+            if ($this->selectedDelegate and $this->selectedDelegate != "ALL") {
+                ActionResponsibility::create([
+                    'meeting_minute_action_id' => $action->id,
+                    'meeting_delegate_id' => $this->selectedDelegate,
+                ]);
+            } //if ($this->selectedDelegate and $this->selectedDelegate != "ALL") {
+        } //try 
+        catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error: creating meeting minute action. ');
+        } //catch (\Exception $e) {
 
         $this->isActionOpen = false;
-
         session()->flash('success', 'Meeting minute Action created successfully');
-    }
-
+    } //public function submitNewAction()
 
     public function removeAction($actionId)
     {
@@ -427,13 +497,16 @@ class MinuteDetail extends Component
             $this->meetingMinuteItem->meetingMinuteItems()->meetingMinuteNotes()->meetingMinuteActions()->detach($actionId);
             $action->delete();
             session()->flash('success', 'Meeting minute Action removed successfully');
-        } catch (\Exception $e) {
-            session()->flash('error', 'Error: removing meeting minute Action. ' . $e->getMessage());
-        }
-    }
+        } //try { 
+        catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error: removing meeting minute Action. ');
+        } //catch (\Exception $e) {
+    } //public function removeAction($actionId) {
 
     public function rescheduleAction($actionId)
     {
+        /*
         $action = MeetingMinuteAction::findOrFail($actionId);
         $this->actionDescription = $action->description;
         $this->actionText = $action->text;
@@ -444,56 +517,88 @@ class MinuteDetail extends Component
             $this->actionRevised = date('Y-m-d');
         $this->isActionOpen = true;
         $this->editingActionId = $actionId;
-    }
+        */
+    } //public function rescheduleAction($actionId)
 
     public function editAction($actionId)
     {
         $action = MeetingMinuteAction::findOrFail($actionId);
         $this->actionDescription = $action->description;
         $this->actionText = $action->text;
-        $this->actionLogged = $action->date_logged;
-        $this->actionDue = $action->date_due;
-        if($action->date_dueRevised)
-            $this->actionRevised = $action->date_dueRevised;
-        else
-            $this->actionRevised = "";
         $this->isActionOpen = true;
         $this->editingActionId = $actionId;
-    }
+    } //public function editAction($actionId)
 
     public function saveAction()
     {
-        $validatedData = $this->validate([
-            'actionDescription' => ['required'],
-            'actionText' => ['required', 'max:255'],
-            'actionRevised' => ['nullable', 'date'],
-        ]);
+        $validatedData = $this->validate();
 
-        $action = MeetingMinuteAction::findOrFail($this->editingActionId);
-        $action->description = $this->actionDescription;
-        $action->text = $this->actionText;
-        $action->date_revised = $this->actionRevised;
-        $action->save();
+        try {
+            $action = MeetingMinuteAction::findOrFail($this->editingActionId);
+            $action->description = $this->actionDescription;
+            $action->text = $this->actionText;
+            $action->save();
+
+            // Update the delegate link
+            if ($this->selectedDelegate && $this->selectedDelegate != "ALL") {
+                ActionResponsibility::updateOrCreate(
+                    [
+                        'meeting_minute_action_id' => $action->id,
+                    ],
+                    [
+                        'meeting_delegate_id' => $this->selectedDelegate,
+                    ]
+                );
+            } //if ($this->selectedDelegate && $this->selectedDelegate != "ALL") {
+        } //try {
+        catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error: updating meeting minute action. ');
+        } //catch (\Exception $e) {
 
         $this->isActionOpen = false;
         $this->editingActionId = null;
         session()->flash('success', 'Meeting minute action updated successfully');
-    }
+    } //public function saveAction()
 
     public function closeAction($actionId) {
-        $action = MeetingMinuteAction::findOrFail($actionId);
-        $actionFeedback = $action->meetingMinuteActionFeedbacks()->whereNull('date_closed')->count();
-        if(empty($actionFeedback)) {
-            $action->date_closed = date("Y-m-d");
-            $action->save();
-            session()->flash('success', 'Meeting minute action closed successfully');
-            $this->isFeedbackOpen = true;
-        } //if(empty($actionFeedback)) {
-        else {
-            session()->flash('error', 'Error: Cannot close action with open feedback. Please close all feedback first.');
-        } //else
-    }
+        try {
+            $actionDescriptors = MeetingMinuteDescriptor::where('meeting_minute_item_id', $itemId)
+                ->where('descriptor_id', $actionId)
+                ->whereNull('date_closed')
+                ->get();
 
+            $acton_cnt = 0;
+            foreach ($actionDescriptors as $descriptor) {
+                if (strpos($descriptor->type, 'action')) {
+                    $actionHasFeedback = MeetingMinuteDescriptorFeedback::where('meeting_minute_descriptor_id', $descriptor->id)
+                        ->exists();
+
+                    if (!$actionHasFeedback) {
+                        session()->flash('error', 'This item cannot be closed because there are still feedback required.');
+                        return;
+                    } //if ($openDescriptors) {
+
+                    $action_cnt++;
+                    $descriptor->date_closed = date("Y-m-d");
+                    $descriptor->save();
+                } //if (strpos($descriptor->type, 'action')) {
+            } //foreach ($noteDescriptors as $descriptor) {
+
+            if($action_cnt > 0) {
+                session()->flash('success', 'Meeting minute action closed $action_cnt successfully.');
+            } //if($note_cnt > 0) {
+            else {
+                session()->flash('error', 'Error: No actions found to be closed.');
+            } //else
+        } //try {
+        catch (\Exception $e) {
+            Log::error('Error closing action: ' . $e->getMessage());
+            session()->flash('error', 'Error: Unable to close the action.');
+        } //catch (\Exception $e) {
+
+        $this->isNoteOpen = false;
+    } //public function closeAction($actionId) {
     
     public function onDelegateSelected($selected_id) {
         $this->selectedDelegate = $selected_id;
@@ -503,12 +608,12 @@ class MinuteDetail extends Component
     //Feedback
     ////////////////////////////////////////////////////
 
-    public function showAddFeedback($actionId) 
+    public function showAddFeedback($descriptorId) 
     {
-        $this->selectedActionId = $actionId;
+        $this->selectedDescriptorId = $descriptorId;
         $this->feedbackText = "";
         $this->isFeedbackOpen = true;
-    }
+    } //public function showAddFeedback($descriptorId) 
 
     public function hideAddFeedback()
     {
@@ -518,63 +623,63 @@ class MinuteDetail extends Component
     public function submitNewFeedback() 
     {
         $this->isFeedbackOpen = false;
-        $validatedData = $this->validate([
-            'feedbackText' => ['required','max:255'],
-        ]);
+        $validatedData = $this->validate();
 
-        $Data['text'] = $this->feedbackText;
-        $Data['date_logged'] = date("Y-m-d");
-        $Data['meeting_minute_action_id'] = $this->selectedActionId;
-      
-        $newFeedback = MeetingMinuteActionFeedback::create($Data);
-        session()->flash('success', 'Meeting minute Feedback created successfully');
-    }
+        try {
+            $feedback = MeetingMinuteDescriptorFeedback::create([
+                'text' =>  $this->feedbackText,
+                'date_logged' => date("Y-m-d"),
+                'meeting_minute_descriptor_id' => $this->selectedDescriptorId,
+            ]);
+            session()->flash('success', 'Meeting minute Feedback created successfully');
+        } //try {
+        catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error: creating meeting minute feedback. ');
+        } //catch (\Exception $e) {    
+    } //public function submitNewFeedback() 
 
     public function removeFeedback($feedbackId)
     {
         try {
-            $feedback = MeetingMinuteActionFeedback::findOrFail($feedbackId);
+            $feedback = MeetingMinuteDescriptorFeedback::findOrFail($feedbackId);
             $feedback->delete();
             session()->flash('success', 'Meeting minute feedback removed successfully');
-        } catch (\Exception $e) {
+        } //try {
+        catch (\Exception $e) {
             session()->flash('error', 'Error: removing meeting minute Feedback. ' . $e->getMessage());
-        }
-    }
+        } //catch (\Exception $e) {
+    } //public function removeFeedback($feedbackId)
 
     public function editFeedback($feedbackId)
     {
-        $feedback = MeetingMinuteActionFeedback::findOrFail($feedbackId);
-        $this->actionDescription = $feedback->description;
+        $feedback = MeetingMinuteDescriptorFeedback::findOrFail($feedbackId);
         $this->actionText = $feedback->text;
-        $this->actionRevised = $feedback->date_revised;
         $this->isFeedbackOpen = true;
         $this->editingFeedbackId = $feedbackId;
-    }
+    } //public function editFeedback($feedbackId)
 
     public function saveFeedback()
     {
-        $validatedData = $this->validate([
-            'feedbackText' => ['required', 'max:255'],
-        ]);
-
-        $feedback = MeetingMinuteActionFeedback::findOrFail($this->editingFeedbackId);
-        $feedback->text = $this->feedbackText;
-        $feedback->date_logged = date("Y-m-d");
-        $feedback->save();
+        $validatedData = $this->validate();
+        
+        try {
+            $feedback = MeetingMinuteDescriptorFeedback::findOrFail($this->editingFeedbackId);
+            $feedback->text = $this->feedbackText;
+            $feedback->save();
+        } //try {
+        catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Error: updating meeting minute feedback. ');
+        } //catch (\Exception $e) {
 
         $this->isFeedbackOpen = false;
         $this->editingFeedbackId = null;
         session()->flash('success', 'Meeting minute feedback updated successfully');
-    }
+    } //public function saveFeedback()
 
 
-/*    public function closeFeedback($feedbackId) {
-        $feedback = MeetingMinuteActionFeedback::findOrFail($feedbackId);
-        $feedback->date_closed = date("Y-m-d");
-        $feedback->save();
-        session()->flash('success', 'Meeting minute feedback closed successfully');
-    }*/
-
+    /////////////////////////////////////////////////////
 
     public function showEndMeeting() {
         $this->isEndMeetingOpen = true;
@@ -666,15 +771,22 @@ class MinuteDetail extends Component
     
     ////////////////////////////////////////////////////
     public function render() {
-        
-        if (empty($this->minutesId)) {
+        if (empty($this->minuteId)) {
             $this->meetingMinute = "";
             $this->page_sub_heading = 'Capture meetings minutes'; 
 
         } else {
-            $this->meetingMinute = MeetingMinute::find($this->minutesId);
-            $this->meetingDate = $this->meetingMinute->meetingDate;
-            $this->meetingState = $this->meetingMinute->meetingState; 
+            $this->meetingMinute = MeetingMinute::find($this->minuteId);
+            $this->meetingDate = $this->meetingMinute->meeting_date;
+            $this->meetingState = $this->meetingMinute->meeting_state;
+            
+            $this->meetingMinuteItems = $this->meetingMinute->items()->get();
+         
+
+            //$meetingMinuteNotes = ;
+            //$meetingMinuteActions = ;
+            //$meetingMinuteFeedbacks = ;
+
             
 /*
             if ($this->meetingMinute->descriptors()->exists()) {

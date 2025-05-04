@@ -28,9 +28,9 @@ class EzimeetingMeetingLocationSeeder extends Seeder
         'is_active' => true,
       ]);
 
-      for($i=0;$i<60;$i++) {
+      for($i=0;$i<10;$i++) {
         MeetingLocation::create([
-          'description' => fake()->word . " " . fake()->numberBetween(1, 50),
+          'description' => fake()->word . " " . fake()->numberBetween(1, 100),
           'text' => fake()->text(200),
           'corporation_id' => fake()->numberBetween(1, $corpCnt),
           'is_active' => true,

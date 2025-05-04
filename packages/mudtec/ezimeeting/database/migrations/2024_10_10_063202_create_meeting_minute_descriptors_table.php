@@ -23,7 +23,7 @@ return new class extends Migration
             $table->timestamp('date_closed')->nullable();
             $table->timestamps();
 
-            $table->unique(['meeting_minute_id', 'meeting_minute_item_id']);
+            //$table->unique(['meeting_minute_id', 'meeting_minute_item_id']);
         });
     }
 
